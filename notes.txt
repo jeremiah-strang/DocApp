@@ -1,0 +1,9 @@
+vue init webpack client
+npm install --save-dev node-sass
+npm install --save-dev sass-loader
+
+postgresql port: 5432
+
+cd DocApp/api && python app.py
+
+postgresql+psycopg2://Superuser/pickles48@127.0.0.1:5432/DocApp

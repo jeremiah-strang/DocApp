@@ -1,0 +1,203 @@
+#dsr-inp-name {
+  width: 200px;
+}
+
+.dsr-toolbar-wrap {
+  height: 61px;
+  background-color: $gray2;
+}
+
+.dsr-body-wrap {
+  height: calc(100% - 61px);
+
+  .dsr-body-left {
+    width: 275px;
+    height: 100%;
+    display: inline-block;
+    float: left;
+  }
+
+  .dsr-globals-wrap {
+    width: 100%;
+    height: 90px;
+
+    .content {
+      overflow: hidden;
+    }
+
+    table.input-table {
+      width: 100%;
+    }
+  }
+
+  .dsr-props-wrap {
+    width: 100%;
+    height: calc(55% - 45px);
+
+    .checkbox-style-wrap {
+      width: 100%;
+      position: relative;
+      background-color: purple;
+
+      button.checkbox-style-option {
+        display: inline-block;
+        float: left;
+        margin-right: 4px;
+        padding: 0;
+        background-color: #fff;
+        border: 2px solid transparent;
+        border-radius: 1px;
+
+        &.selected {
+          border-color: $selected-border;
+        }
+      }
+    }
+  }
+
+  .dsr-inputs-wrap {
+    width: 100%;
+    height: calc(45% - 45px);
+  }
+
+  .dsr-surface-outerwrap {
+    width: calc(100% - 275px);
+    height: 100%;
+    display: inline-block;
+    float: left;
+    position: relative;
+    box-sizing: border-box;
+    padding: $pad1;
+  }
+
+  .dsr-surface-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    box-sizing: border-box;
+    overflow: auto;
+
+    .dsr-toolbox {
+      width: 200px;
+      position: absolute;
+      border-radius: 4px;
+      overflow: hidden;
+      z-index: 1001;
+      border:1px solid $gray4;
+
+      .toolbox-tool-wrap {
+        width: 100%;
+        padding: 4px 0 8px 0;
+      }
+    }
+
+    .dsr-pdf-wrap {
+      height: 1100pt;
+      width: 850pt;
+      background-image: url('/images/example.jpg');
+      background-size: contain;
+      margin-left: 210px;
+    }
+  }
+
+  .toolbox-tool-static,
+  .toolbox-tool-dragger,
+  .toolbox-tool {
+    border: 2px dashed $gray5;
+    background-color: #fff;
+    overflow: hidden;
+  }
+
+  .toolbox-tool-dragger {
+    z-index: 1002;
+  }
+
+  .toolbox-tool {
+    z-index: 1000;
+  }
+
+  .toolbox-tool-dragger,
+  .toolbox-tool {
+    position: absolute;
+    cursor: move;
+
+    &:hover {
+      border-color: lighten($selected-border, 10%);
+    }
+
+    &.activated {
+      border: 2px dashed $activated-border;
+      background-color: $activated-background;
+    }
+
+    &.selected, &.selected.activated {
+      border: 2px dashed $selected-border;
+      background-color: $selected-background;
+    }
+  }
+
+  .toolbox-text-tool,
+  .toolbox-longtext-tool,
+  .toolbox-checkbox-tool,
+  .toolbox-drawing-tool,
+  .toolbox-text-tool-dragger,
+  .toolbox-checkbox-tool-dragger,
+  .toolbox-drawing-tool-dragger {
+    color: #000;
+    background-color: #fff;
+  }
+
+  .toolbox-text-tool,
+  .toolbox-longtext-tool,
+  .toolbox-number-tool,
+  .toolbox-phonenumber-tool,
+  .toolbox-date-tool {
+    padding: $pad4;
+    font-size: 12pt;
+    font-family: "Helvetica";
+    color: #000;
+  }
+
+  .toolbox-checkbox-tool,
+  .toolbox-checkbox-tool-dragger {
+    height: 14px;
+    width: 14px;
+    background-color: #fff;
+
+    &.toolbox-checkbox-tool1 {
+      background: url('/images/check-16x16.png') center center no-repeat;
+      background-color: #fff;
+    }
+
+    &.toolbox-checkbox-tool2 {
+      background: url('/images/x-16x16.png') center center no-repeat;
+      background-color: #fff;
+    }
+
+    &.toolbox-checkbox-tool3 {
+      background-color: #000;
+    }
+
+    &.toolbox-checkbox-tool1,
+    &.toolbox-checkbox-tool2,
+    &.toolbox-checkbox-tool3 {
+
+      &.activated {
+        background-color: $activated-background;
+        border-color: transparent;
+      }
+
+      &.selected, &.selected.activated {
+        background-color: $selected-background;
+      }
+    }
+  }
+
+  .toolbox-drawing-tool {
+    height: 26px;
+  }
+}
+
+.btn-view-props {
+  margin-bottom: 4px;
+}
