@@ -6,7 +6,6 @@ import psycopg2
 
 CONNECTION_STRING = "dbname='DocApp' user='Superuser' host='localhost' password='pickles48'"
 
-
 app = Flask(__name__)
 api = Api(app)
 
