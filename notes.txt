@@ -7,7 +7,6 @@ cd DocApp/api && C:\Users\jeremiah\AppData\Local\Programs\Python\Python36-32\pyt
 
 CONNECTION_STRING = "dbname='DocApp' user='Superuser' host='localhost' password='pickles48'"
 
-
 pip3 install flask
 pip3 install flask-restful
 pip3 install psycopg2

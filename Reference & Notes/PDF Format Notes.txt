@@ -1,0 +1,18 @@
+### PDF Document Layout:
+* **Header** - specifies PDF version
+* **Body** - sequence of objects
+* **Cross-reference table (XREF)** - where to find each object
+* **Trailer** - where to find XREF
+
+### Everything is an object
+* **CosObj** - CosString, CosInteger, CosArray, CosDict
+* **PDDoc** - PDPage, PDBookmark, PDAnnot
+* **AVDoc** - AVWindow, AVPageView, AVTool
+* **PDEObject** - PDEText, PDEImage, PDEPath
+* Acrobat treats the objects as opaque, while SPDF lets you view their contents in the debugger
+
+**ASAtoms** - hashed tokens that Acrobat uses in place of strings
+
+**ASFileSys** - 
+
+**ASPathName** - 
