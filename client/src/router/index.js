@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
+import Documents from '@/components/Documents'
+import Account from '@/components/Account'
+import Dashboard from '@/components/Dashboard'
 
 Vue.use(Router)
 
@@ -8,8 +10,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello
-    }
+      name: 'Documents',
+      component: Documents,
+    },
+    {
+      path: '/account',
+      name: 'Account',
+      component: Account,
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard,
+    },
   ]
 })

@@ -1,6 +1,6 @@
-# client
+# blossom-client
 
-> DocApp Web Client
+> Blossom.im client
 
 ## Build Setup
 

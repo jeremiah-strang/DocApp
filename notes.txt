@@ -2,11 +2,37 @@ vue init webpack client
 npm install --save-dev node-sass
 npm install --save-dev sass-loader
 
-cd DocApp/api && python app.py
-cd DocApp/api && C:\Users\jeremiah\AppData\Local\Programs\Python\Python36-32\python.exe app.py
+cd DocApp/old-api && python app.py
+cd DocApp/old-api && C:\Users\jeremiah\AppData\Local\Programs\Python\Python36-32\python.exe app.py
 
 CONNECTION_STRING = "dbname='DocApp' user='Superuser' host='localhost' password='pickles48'"
 
 pip3 install flask
 pip3 install flask-restful
 pip3 install psycopg2
+
+
+# Making a virtual environment for the django api, creating the api project
+cd C:\Users\jeremiah\Dev\DocApp\api
+mkvirtualenv doc-app-api
+workon doc-app-api
+pip install django
+pip install djangorestframework
+django-admin startproject docapp
+cd docapp
+django-admin startapp docapp1
+python manage.py migrate
+python manage.py createsuperuser
+admin
+jeremiahrstrang@gmail.com
+pickles48
+pickles48
+
+# Test api (in bash)
+curl -H 'Accept: application/json; indent=4' -u admin:pickles48 http://127.0.0.1:8000/users/
+#   Can also navigate to http://127.0.0.1:8000/users/ and log in at top right
+
+# Start postgres:
+#   run: services.msc
+
+python manage.py runserver 127.0.0.1:3000
