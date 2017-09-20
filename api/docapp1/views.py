@@ -47,20 +47,27 @@ def user_upload_list(request):
     for chunk in file_content.chunks():
         fout.write(chunk)
     fout.close()
-    numPages = 0
+    # numPages = 0
+    toDelete = []
     with Image(filename=pdfPath, resolution=100) as img:
-      numPages = len(img.sequence)
-      with img.convert('png') as converted:
-        converted.save(filename=pngPath)
-    toDelete = None
-    if numPages > 1:
-      toDelete = []
-      for i in range(numPages):
-        toDelete.append(pngPath.replace('.png', '-' + str(i) + '.png'))
-      pngPath = pngPath.replace('.png', '-0.png')
-    else:
-      toDelete = [pngPath]
-    encoded_string = base64.b64encode(open(pngPath, 'rb').read())
+      # numPages = len(img.sequence)
+      for i, page in enumerate(img.sequence):
+        converted = Image(image=page)
+        converted = converted.convert('png')
+        fName = pngPath.replace('.png', '-p' + str(i) + '.png')
+        converted.save(filename=fName)
+        toDelete.append(fName)
+      # with img.convert('png') as converted:
+      #   converted.save(filename=pngPath)
+    # toDelete = None
+    # if numPages > 1:
+    #   toDelete = []
+    #   for i in range(numPages):
+    #     toDelete.append(pngPath.replace('.png', '-' + str(i) + '.png'))
+    #   pngPath = pngPath.replace('.png', '-0.png')
+    # else:
+    #   toDelete = [pngPath]
+    encoded_string = base64.b64encode(open(toDelete[0], 'rb').read())
     res = HttpResponse(encoded_string, content_type='image/png', status=200)
     os.remove(pdfPath)
     for fPath in toDelete:
