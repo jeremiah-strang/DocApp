@@ -93,7 +93,7 @@
           onend: (event) => {
             if (draggingTool) {
               if (draggingTool.classList.contains('active')) {
-
+                // draggingTool.classList.add('selected')
               } else {
                 this.$refs.docBuilder.removeChild(draggingTool)
               }
@@ -214,8 +214,13 @@
 
       &.active {
         background-color: rgba($theme-color, 0.15);
-        border: 2px dashed rgba($theme-color, 0.5);
+        border-color: rgba($theme-color, 0.5);
         color: $font-dark;
+
+        &.selected {
+          background-color: rgba($theme-red, 0.15);
+          border-color: rgba($theme-red, 0.5);
+        }
       }
     }
   }
