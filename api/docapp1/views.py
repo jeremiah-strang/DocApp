@@ -47,14 +47,24 @@ def user_upload_list(request):
     for chunk in file_content.chunks():
         fout.write(chunk)
     fout.close()
+    numPages = 0
     with Image(filename=pdfPath, resolution=100) as img:
+      numPages = len(img.sequence)
       with img.convert('png') as converted:
         converted.save(filename=pngPath)
+    toDelete = None
+    if numPages > 1:
+      toDelete = []
+      for i in range(numPages):
+        toDelete.append(pngPath.replace('.png', '-' + str(i) + '.png'))
+      pngPath = pngPath.replace('.png', '-0.png')
+    else:
+      toDelete = [pngPath]
     encoded_string = base64.b64encode(open(pngPath, 'rb').read())
     res = HttpResponse(encoded_string, content_type='image/png', status=200)
-    # res = HttpResponse(open(pngPath, 'rb'), content_type='image/png', status=200)
     os.remove(pdfPath)
-    os.remove(pngPath)
+    for fPath in toDelete:
+      os.remove(fPath)
     return res
 
 @csrf_exempt

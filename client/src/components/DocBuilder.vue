@@ -24,6 +24,9 @@
   const $ = require('jquery')
   const interact = require('interact.js')
 
+  /**
+   * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
+   */
   const getOffset = (el, subtractEl) => {
     el = el.getBoundingClientRect()
     let result = {
