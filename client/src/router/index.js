@@ -10,6 +10,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Dashboard',
+      component: Dashboard,
+    },
+    {
+      path: '/documents',
       name: 'Documents',
       component: Documents,
     },
@@ -17,11 +22,6 @@ export default new Router({
       path: '/account',
       name: 'Account',
       component: Account,
-    },
-    {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: Dashboard,
     },
   ]
 })

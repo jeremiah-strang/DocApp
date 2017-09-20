@@ -4,12 +4,12 @@
 
       <div class="app-nav-toggle" v-on:click="toggleNav"><i class="fa fa-thumb-tack"></i></div>
 
-      <router-link to="/Dashboard" title="View/edit your dashboard">
-        <i class="fa fa-dashboard"></i>
+      <router-link to="/" title="View/edit your dashboard">
+        <i class="fa fa-home"></i>
         <span v-show="isNavMaximized">Dashboard</span>
       </router-link>
 
-      <router-link to="/" title="Go to your documents">
+      <router-link to="/Documents" title="Go to your documents">
         <i class="fa fa-files-o"></i>
         <span v-show="isNavMaximized">Documents</span>
       </router-link>
@@ -27,16 +27,25 @@
 </template>
 
 <script>
+  const appNavWidth = 40
+  const appNavMaximizedWidth = 140
+
   export default {
     name: 'app',
     data: function () {
       return {
         isNavMaximized: false,
+        appNavWidth: appNavWidth,
       }
     },
     methods: {
       toggleNav: function () {
         this.isNavMaximized = !this.isNavMaximized
+        if (this.isNavMaximized) {
+          this.appNavWidth = appNavWidth
+        } else {
+          this.appNavWidth = appNavMaximizedWidth
+        }
       }
     }
   }
@@ -45,7 +54,7 @@
 <style lang="scss">
   @import 'style/_shared.scss';
   $app-nav-width: 40px;
-  $app-nav-toggled-width: 140px;
+  $app-nav-maximized-width: 140px;
 
   #app {
     @extend .pnl;
@@ -99,7 +108,7 @@
 
 
     &.app-nav-toggled {
-      width: $app-nav-toggled-width;
+      width: $app-nav-maximized-width;
 
       > a > i:first-child {
         width: 24px;
@@ -125,7 +134,7 @@
     top: 0;
 
     &.app-nav-toggled {
-      padding-left: $app-nav-toggled-width;
+      padding-left: $app-nav-maximized-width;
     }
   }
 </style>
