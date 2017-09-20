@@ -47,7 +47,7 @@
     name: 'doc-builder',
     data () {
       return {
-        showEditor: true,
+        showEditor: false,
         previewImageSrc: '',
       }
     },
@@ -97,8 +97,10 @@
           },
           onend: (event) => {
             if (draggingTool) {
+              draggingTool.classList.remove('dragging')
               if (draggingTool.classList.contains('active')) {
                 draggingTool.classList.add('selected')
+                // interact(draggingTool)
               } else {
                 this.$refs.docBuilder.removeChild(draggingTool)
               }
@@ -128,7 +130,14 @@
             draggingTool = target
           }
         })
-
+        .resizable({
+          edges: { right: true },
+        })
+        .on('resizemove', (event) => {
+          let target = event.target
+          target.style.height = '' + parseInt(event.rect.height) + 'px'
+          target.style.width = '' + parseInt(event.rect.width) + 'px'
+        })
       // make the doc builder surface a dropzone
       interact('.doc-builder-surface').dropzone({
         accept: '.toolbox-tool',
@@ -212,28 +221,28 @@
 
     .toolbox-wrap {
       @extend .shadowed;
-      position: fixed;
-      top: 9px;
-      left: 914px;
       background-color: $dark1;
-      width: 200px;
       border-radius: 8px;
       border: 1px solid $dark10;
+      left: 914px;
+      position: fixed;
+      top: 9px;
+      width: 200px;
 
       .toolbox-hdr {
         @extend .pnl;
+        border-bottom: 1px solid $dark10;
+        color: $font-light;
         padding: 6px;
         width: 100%;
-        color: $font-light;
-        border-bottom: 1px solid $dark10;
       }
 
       .toolbox {
         @extend .pnl;
-        padding: 6px;
-        width: 100%;
         height: 100%;
         overflow: visible;
+        padding: 6px;
+        width: 100%;
       }
     }
 
@@ -241,21 +250,30 @@
       @extend .pnl;
       background-color: $dark5;
       border-radius: 4px;
-      border: 2px dashed $dark10;
+      border: 2px solid $dark5;
       color: $font-light;
       font-family: Helvetica;
       font-size: 12pt;
-      padding: 2pt;
       margin-bottom: 4px;
+      overflow: hidden;
+      padding: 2pt;
 
       &:last-child {
         margin-bottom: 0;
+      }
+
+      &.dragging {
+        border-style: dashed;
       }
 
       &.active {
         background-color: rgba($dark1, 0.15);
         border-color: rgba($dark1, 0.5);
         color: $font-dark;
+
+        &:not(.dragging) {
+          border-color: transparent;
+        }
 
         &.selected {
           background-color: rgba($theme-color, 0.15);
