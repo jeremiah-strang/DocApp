@@ -10,6 +10,7 @@
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
       <div v-show="showEditor" class="toolbox-wrap">
+        <div class="toolbox-hdr">Toolbox</div>
         <div ref="toolbox" class="toolbox">
           <div class="toolbox-tool">Text Input</div>
           <div class="toolbox-tool">Number Input</div>
@@ -46,7 +47,7 @@
     name: 'doc-builder',
     data () {
       return {
-        showEditor: false,
+        showEditor: true,
         previewImageSrc: '',
       }
     },
@@ -74,6 +75,7 @@
     mounted: function () {
       let draggingTool
 
+      // set up ability to drag toolbox tools onto the doc builder surface
       interact('.toolbox-tool')
         .draggable({
           inertia: false,
@@ -127,6 +129,7 @@
           }
         })
 
+      // make the doc builder surface a dropzone
       interact('.doc-builder-surface').dropzone({
         accept: '.toolbox-tool',
         overlap: 0.75,
@@ -149,6 +152,27 @@
         ondropdeactivate: function (event) {
         }
       })
+
+      // make the toolbox draggable
+      interact('.toolbox-hdr')
+        .draggable({
+          inertia: false,
+          restrict: {
+            restriction: this.$refs.docBuilder,
+            endOnly: true,
+            elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+          },
+          autoScroll: true,
+          onmove: (event) => {
+            let target = event.target.parentNode
+            let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+            let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+            target.style.webkitTransform = target.style.transform =
+              'translate(' + x + 'px, ' + y + 'px)'
+            target.setAttribute('data-x', x)
+            target.setAttribute('data-y', y)
+          },
+        })
     },
     components: {
     }
@@ -194,6 +218,15 @@
       background-color: $dark1;
       width: 200px;
       border-radius: 8px;
+      border: 1px solid $dark10;
+
+      .toolbox-hdr {
+        @extend .pnl;
+        padding: 6px;
+        width: 100%;
+        color: $font-light;
+        border-bottom: 1px solid $dark10;
+      }
 
       .toolbox {
         @extend .pnl;
