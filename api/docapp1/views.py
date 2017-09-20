@@ -40,17 +40,16 @@ def user_upload_list(request):
     # file = request.POST.get('file') # request.FILES['file']
     file = request.FILES['file']
     pdfPath = os.path.join(USER_UPLOADS_FOLDER, file.name)
+    if pdfPath[-4:].lower() != '.pdf':
+      return HttpResponse(None, status=400)
     pngPath = pdfPath.replace('.pdf', '.png')
     fout = open(pdfPath, 'wb+')
     file_content = ContentFile(file.read())
-    # Iterate through the chunks.
     for chunk in file_content.chunks():
         fout.write(chunk)
     fout.close()
-    # numPages = 0
     toDelete = []
     with Image(filename=pdfPath, resolution=100) as img:
-      # numPages = len(img.sequence)
       for i, page in enumerate(img.sequence):
         converted = Image(image=page)
         converted = converted.convert('png')
@@ -59,14 +58,6 @@ def user_upload_list(request):
         toDelete.append(fName)
       # with img.convert('png') as converted:
       #   converted.save(filename=pngPath)
-    # toDelete = None
-    # if numPages > 1:
-    #   toDelete = []
-    #   for i in range(numPages):
-    #     toDelete.append(pngPath.replace('.png', '-' + str(i) + '.png'))
-    #   pngPath = pngPath.replace('.png', '-0.png')
-    # else:
-    #   toDelete = [pngPath]
     encoded_string = base64.b64encode(open(toDelete[0], 'rb').read())
     res = HttpResponse(encoded_string, content_type='image/png', status=200)
     os.remove(pdfPath)
