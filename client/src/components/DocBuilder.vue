@@ -210,7 +210,6 @@
       border-radius: 4px;
       border: 2px dashed $dark10;
       color: $font-light;
-      // display: none;
       font-family: Helvetica;
       font-size: 12pt;
       padding: 2pt;
@@ -221,13 +220,13 @@
       }
 
       &.active {
-        background-color: rgba($theme-color, 0.15);
-        border-color: rgba($theme-color, 0.5);
+        background-color: rgba($dark1, 0.15);
+        border-color: rgba($dark1, 0.5);
         color: $font-dark;
 
         &.selected {
-          background-color: rgba($theme-green, 0.15);
-          border-color: rgba($theme-green, 0.5);
+          background-color: rgba($theme-color, 0.15);
+          border-color: rgba($theme-color, 0.5);
         }
       }
     }

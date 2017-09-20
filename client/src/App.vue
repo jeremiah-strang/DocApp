@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <div class="app-nav" :class="isNavMaximized ? 'app-nav-toggled' : ''">
+    <div class="app-nav" :class="isNavMaximized ? 'app-nav-maximized' : ''">
 
       <div class="app-nav-toggle" v-on:click="toggleNav"><i class="fa fa-thumb-tack"></i></div>
 
-      <router-link to="/" title="View/edit your dashboard">
+      <router-link to="/" title="Go to your dashboard">
         <i class="fa fa-home"></i>
         <span v-show="isNavMaximized">Dashboard</span>
       </router-link>
 
-      <router-link to="/Documents" title="Go to your documents">
+      <router-link to="/Documents" title="Manage to your documents">
         <i class="fa fa-files-o"></i>
         <span v-show="isNavMaximized">Documents</span>
       </router-link>
@@ -20,7 +20,7 @@
       </router-link>
     </div>
 
-    <div class="app-body" :class="isNavMaximized ? 'app-nav-toggled' : ''">
+    <div class="app-body" :class="isNavMaximized ? 'app-nav-maximized' : ''">
       <router-view></router-view>
     </div>
   </div>
@@ -107,7 +107,7 @@
     }
 
 
-    &.app-nav-toggled {
+    &.app-nav-maximized {
       width: $app-nav-maximized-width;
 
       > a > i:first-child {
@@ -133,7 +133,7 @@
     position: absolute;
     top: 0;
 
-    &.app-nav-toggled {
+    &.app-nav-maximized {
       padding-left: $app-nav-maximized-width;
     }
   }
