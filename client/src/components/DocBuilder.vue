@@ -93,7 +93,7 @@
           onend: (event) => {
             if (draggingTool) {
               if (draggingTool.classList.contains('active')) {
-                // draggingTool.classList.add('selected')
+                draggingTool.classList.add('selected')
               } else {
                 this.$refs.docBuilder.removeChild(draggingTool)
               }
@@ -116,6 +116,9 @@
             draggingTool.setAttribute('data-y', targetOffset.top)
             event.interaction.element = draggingTool
             event.interaction.draggingTool = false
+            for (let tool of document.querySelectorAll('.selected')) {
+              tool.classList.remove('selected')
+            }
           } else {
             draggingTool = target
           }
@@ -129,11 +132,13 @@
         ondragenter: function (event) {
           if (draggingTool) {
             draggingTool.classList.add('active')
+            draggingTool.classList.add('selected')
           }
         },
         ondragleave: function (event) {
           if (draggingTool) {
             draggingTool.classList.remove('active')
+            draggingTool.classList.remove('selected')
           }
         },
         ondrop: function (event) {
@@ -218,8 +223,8 @@
         color: $font-dark;
 
         &.selected {
-          background-color: rgba($theme-red, 0.15);
-          border-color: rgba($theme-red, 0.5);
+          background-color: rgba($theme-green, 0.15);
+          border-color: rgba($theme-green, 0.5);
         }
       }
     }
