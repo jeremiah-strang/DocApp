@@ -82,8 +82,8 @@
         let docField = {
           uuid: uuidv4(),
           type: toolboxTool.getAttribute('data-field-type'),
-          x: toolPos.left + 'px',
-          y: toolPos.top + 'px',
+          x: toolPos.left,
+          y: toolPos.top,
           height: toolboxTool.style.height,
           width: toolboxTool.style.width,
           text: toolboxTool.innerHTML,
