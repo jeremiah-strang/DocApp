@@ -15,6 +15,8 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
+      <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item"></doc-field>
+
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
       <div class="toolbox-wrap">
@@ -33,7 +35,8 @@
 
 <script>
   const $ = require('jquery')
-  const interact = require('interact.js')
+  import interact from 'interact.js'
+  import DocField from '@/components/DocField'
 
   export default {
     name: 'doc-builder',
@@ -42,7 +45,7 @@
         showEditor: false,
         previewImageSrc: '',
         name: '',
-
+        docFields: [],
       }
     },
     watch: {
@@ -179,6 +182,7 @@
         })
     },
     components: {
+      DocField
     }
   }
 
