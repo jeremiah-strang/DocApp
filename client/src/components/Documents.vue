@@ -1,6 +1,6 @@
 <template>
   <div class="documents">
-    <doc-builder :leftOffset="140" v-if="docBuilderOpen"></doc-builder>
+    <doc-builder v-if="docBuilderOpen"></doc-builder>
     <h3 v-else>Documents</h3>
   </div>
 </template>
