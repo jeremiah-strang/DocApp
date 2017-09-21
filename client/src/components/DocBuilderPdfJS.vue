@@ -109,8 +109,7 @@
       uploadFormSubmit: function (e) {
         e.preventDefault()
         let fileInput = $(this.$refs.fileUploadInput)
-        let fileType = fileInput.get(0).files[0].type
-        console.log('fileType: ' + fileType)
+        let fileType = this.$refs.fileUploadInput.files[0].type
         if (fileType === 'application/pdf') {
           // let pdfUrl = URL.createObjectURL(fileInput.get(0).files[0])
 
@@ -120,7 +119,6 @@
             pdfDoc.getPage(1).then((page) => {
               let canvas = this.$refs.docBuilderCanvas
               let scale = canvas.width / page.getViewport(1).width
-              console.log(scale)
               let viewport = page.getViewport(scale)
               canvas.height = viewport.height
 
@@ -258,9 +256,8 @@
       },
     },
     mounted: function () {
-      let draggingTool
-      console.log(pdfjs.PDFJS)
       // set up ability to drag toolbox tools onto the doc builder surface
+      let draggingTool
       interact('.toolbox-tool')
         .draggable({
           inertia: false,
