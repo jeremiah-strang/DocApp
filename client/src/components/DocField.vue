@@ -114,7 +114,7 @@
       border-color: rgba($theme-color, 0.5);
 
       .fa.fa-trash {
-        border-color: rgba($theme-color, 0.5);
+        color: rgba($theme-color, 0.5);
       }
     }
 
@@ -125,7 +125,7 @@
 
     .fa.fa-trash {
       @extend.float-right;
-      color: rgba($theme-color, 0.5);
+      color: rgba($dark1, 0.5);
       cursor: pointer;
     }
   }

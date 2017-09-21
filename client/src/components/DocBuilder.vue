@@ -16,7 +16,7 @@
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
-                 :on-select="onSelectDocField" v-on:delete-doc-field="onDeleteDocField(index)"></doc-field>
+                 :on-select="onSelectDocField" v-on:delete-doc-field="onDeleteDocField(item, index)"></doc-field>
 
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div v-if="selectedDocField.selected" class="field-editor-wrap toolbox-wrap">
+      <div v-show="selectedDocField.selected" class="field-editor-wrap toolbox-wrap">
         <div class="toolbox-hdr">Field Properties</div>
         <div class="toolbox">
           <h4>Field Name</h4>
@@ -136,11 +136,14 @@
       /*
        * Deletes a doc field at the given index
        */
-      onDeleteDocField: function (docFieldIndex) {
-        this.docFields.splice(docFieldIndex, 1)
-        this.selectedDocField = {
-          name: '',
-          selected: false,
+      onDeleteDocField: function (docField, index) {
+        this.docFields.splice(index, 1)
+        if (this.selectedDocField.uuid === docField.uuid) {
+          this.selectedDocField.selected = false
+          this.selectedDocField = {
+            name: '',
+            selected: false,
+          }
         }
       },
     },
