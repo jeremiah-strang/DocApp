@@ -1,6 +1,9 @@
 <template>
   <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
-    v-on:click="onClick" class="doc-field">{{ docField.text }}</div>
+    v-on:click="onClick" class="doc-field">
+    <span class="doc-field-text">{{ docField.text }}</span>&nbsp;
+    <i v-on:click="$emit('delete-doc-field')" class="fa fa-trash"></i>
+  </div>
 </template>
 
 <script>
@@ -81,6 +84,7 @@
           target.style.width = event.rect.width + 'px'
           this.docField.height = event.rect.height
           this.docField.width = event.rect.width
+          console.log(this.docField.height)
         })
     },
     components: {
@@ -101,12 +105,28 @@
     font-size: 12pt;
     overflow: hidden;
     padding: 2pt;
+    padding-right: 6px;
     position: absolute;
     z-index: 1;
 
     &.selected {
       background-color: rgba($theme-color, 0.15);
       border-color: rgba($theme-color, 0.5);
+
+      .fa.fa-trash {
+        border-color: rgba($theme-color, 0.5);
+      }
+    }
+
+    .doc-field-text {
+      @extend .pnl;
+      width: 100%;
+    }
+
+    .fa.fa-trash {
+      @extend.float-right;
+      color: rgba($theme-color, 0.5);
+      cursor: pointer;
     }
   }
 </style>

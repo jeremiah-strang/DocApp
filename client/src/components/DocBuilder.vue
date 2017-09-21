@@ -16,7 +16,7 @@
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
-                 :on-select="onSelectDocField"></doc-field>
+                 :on-select="onSelectDocField" v-on:delete-doc-field="onDeleteDocField(index)"></doc-field>
 
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
@@ -127,7 +127,21 @@
         this.docFields.forEach(df => {
           df.selected = df.uuid === docField.uuid
         })
-        this.selectedDocField = docField
+        this.selectedDocField = docField || {
+          name: '',
+          selected: false,
+        }
+      },
+
+      /*
+       * Deletes a doc field at the given index
+       */
+      onDeleteDocField: function (docFieldIndex) {
+        this.docFields.splice(docFieldIndex, 1)
+        this.selectedDocField = {
+          name: '',
+          selected: false,
+        }
       },
     },
     mounted: function () {
