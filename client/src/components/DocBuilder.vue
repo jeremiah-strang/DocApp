@@ -16,7 +16,9 @@
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
-                 :on-select="onSelectDocField" v-on:delete-doc-field="onDeleteDocField(item, index)"></doc-field>
+                 :on-select="onSelectDocField" :id="item.uuid" 
+                 v-on:delete-doc-field="onDeleteDocField(item, index)">
+      </doc-field>
 
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
@@ -46,7 +48,11 @@
   const $ = require('jquery')
   import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
+  import utils from '../utils/utils'
   import DocField from '@/components/DocField'
+
+  const snapRangeX = 10
+  const snapRangeY = 10
   
   export default {
     name: 'doc-builder',
@@ -99,7 +105,7 @@
        * Converts a toolbox tool element to a doc field component and adds it to the document
        */
       addDocField: function (toolboxTool) {
-        let toolPos = getPositioning(toolboxTool, this.$refs.docBuilderSurface)
+        let toolPos = utils.getPositioning(toolboxTool, this.$refs.docBuilderSurface)
         let type = toolboxTool.getAttribute('data-field-type')
         this.sharedDocFieldProps[type].count
         let name = type.substring(0, 1).toUpperCase() + type.substring(1, type.length) + ' Field ' +
@@ -109,8 +115,8 @@
           name: name,
           uuid: uuidv4(),
           type: type,
-          x: getSnapLine(toolPos.left, this.snapLinesX, snapRangeX),
-          y: getSnapLine(toolPos.top, this.snapLinesY, snapRangeY),
+          x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX),
+          y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY),
           height: toolboxTool.style.height,
           width: toolboxTool.style.width,
           text: getDefaultFieldText(type),
@@ -187,7 +193,7 @@
         .on('dragstart', (event) => {
           let target = event.target
           if (!target.dragOrigin) {
-            let targetOffset = getPositioning(target, this.$refs.docBuilder)
+            let targetOffset = utils.getPositioning(target, this.$refs.docBuilder)
             draggingTool = target.cloneNode(true)
             draggingTool.classList.add('dragging')
             draggingTool.style.position = 'absolute'
@@ -264,42 +270,6 @@
     components: {
       DocField
     }
-  }
-
-  const snapRangeX = 10
-  const snapRangeY = 10
-
-  /**
-   * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
-   */
-  const getPositioning = (el, subtractEl) => {
-    el = el.getBoundingClientRect()
-    let result = {
-      left: el.left + window.scrollX,
-      top: el.top + window.scrollY,
-      width: el.width,
-      height: el.height,
-    }
-
-    if (subtractEl) {
-      subtractEl = getPositioning(subtractEl)
-      result.left -= subtractEl.left
-      result.top -= subtractEl.top
-    }
-    return result
-  }
-
-  /**
-   *
-   */
-  const getSnapLine = (pos, snapLines, snapRange) => {
-    let snap = snapLines.find(line => { return Math.abs(line - pos) <= snapRange })
-    console.log(JSON.stringify(snapLines, null, '  '))
-    if (!snap) {
-      snapLines.push(pos)
-      return pos
-    }
-    return snap
   }
 
   /**

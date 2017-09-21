@@ -54,16 +54,14 @@
           },
           autoScroll: true,
           onmove: (event) => {
-            if (this.$refs.docFieldEl) {
-              let x = (parseFloat(this.$refs.docFieldEl.getAttribute('data-x')) || 0) + event.dx
-              let y = (parseFloat(this.$refs.docFieldEl.getAttribute('data-y')) || 0) + event.dy
-              this.$refs.docFieldEl.style.left = x + 'px'
-              this.$refs.docFieldEl.style.top = y + 'px'
-              this.$refs.docFieldEl.setAttribute('data-x', x)
-              this.$refs.docFieldEl.setAttribute('data-y', y)
-              this.docField.x = x
-              this.docField.y = y
-            }
+            let x = (parseFloat(this.$refs.docFieldEl.getAttribute('data-x')) || 0) + event.dx
+            let y = (parseFloat(this.$refs.docFieldEl.getAttribute('data-y')) || 0) + event.dy
+            this.$refs.docFieldEl.style.left = x + 'px'
+            this.$refs.docFieldEl.style.top = y + 'px'
+            this.$refs.docFieldEl.setAttribute('data-x', x)
+            this.$refs.docFieldEl.setAttribute('data-y', y)
+            this.docField.x = x
+            this.docField.y = y
           },
           onend: (event) => {
           }
