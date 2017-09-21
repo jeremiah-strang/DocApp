@@ -104,7 +104,7 @@
     font-family: Helvetica;
     font-size: 12pt;
     overflow: hidden;
-    padding: 2pt;
+    padding: 3px 6px 3px 3px;
     padding-right: 6px;
     position: absolute;
     z-index: 1;

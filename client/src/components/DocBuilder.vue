@@ -36,8 +36,20 @@
       <div v-show="selectedDocField.selected" class="field-editor-wrap toolbox-wrap">
         <div class="toolbox-hdr">Field Properties</div>
         <div class="toolbox">
-          <h4>Field Name</h4>
-          <input v-model="selectedDocField.name" type="text">
+          <div class="input-wrap">
+            <h4>Field Name</h4>
+            <input v-model="selectedDocField.name" v-on:focus="$event.target.select()" type="text">
+          </div>
+          <div v-show="selectedDocField.type === 'number'" class="input-wrap">
+            <h4>Number Format</h4>
+            <input v-model="selectedDocField.numberFormat" v-on:focus="$event.target.select()"
+                   type="text">
+          </div>
+          <div class="input-wrap">
+            <h4>Default Value</h4>
+            <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
+                   type="text">
+          </div>
         </div>
       </div>
     </div>
@@ -179,15 +191,6 @@
           onend: (event) => {
             this.addDocField(draggingTool)
             this.$refs.docBuilder.removeChild(draggingTool)
-            // if (draggingTool) {
-            //   draggingTool.classList.remove('dragging')
-            //   if (draggingTool.classList.contains('active')) {
-            //     draggingTool.classList.add('selected')
-            //     // interact(draggingTool)
-            //   } else {
-            //     this.$refs.docBuilder.removeChild(draggingTool)
-            //   }
-            // }
           }
         })
         .on('dragstart', (event) => {
@@ -201,6 +204,7 @@
             draggingTool.style.left = targetOffset.left + 'px'
             draggingTool.style.width = target.getBoundingClientRect().width + 'px'
             draggingTool.dragOrigin = target
+            draggingTool.innerHTML = getDefaultFieldText(draggingTool.getAttribute('data-field-type'))
             this.$refs.docBuilder.appendChild(draggingTool)
             draggingTool.setAttribute('data-x', targetOffset.left)
             draggingTool.setAttribute('data-y', targetOffset.top)
@@ -293,7 +297,7 @@
       case 'text':
         return 'Example text'
       case 'number':
-        return '123.45'
+        return '12345.67'
       case 'date':
         return '1/1/2017'
       case 'phone':
@@ -315,10 +319,11 @@
 
     .settings-wrap {
       @extend .pnl;
-      // @extend .w100;
       @extend .pad1;
       @extend .shadowed;
       background-color: $dark1;
+      border-top-right-radius: 8px;
+      border-top-left-radius: 8px;
       color: $font-light;
       margin-bottom: 9px;
       width: 1062px;
@@ -376,14 +381,11 @@
     }
 
     .field-editor-wrap {
-      top: 280px;
+      top: 288px;
     }
 
     .toolbox-tool-wrap {
       top: 80px;
-
-      .toolbox {
-      }
     }
 
     .toolbox-tool {
@@ -396,13 +398,14 @@
       font-size: 12pt;
       margin-bottom: 4px;
       overflow: hidden;
-      padding: 2pt;
+      padding: 3px;
 
       &:last-child {
         margin-bottom: 0;
       }
 
       &.dragging {
+        @extend .shadowed;
         border-style: dashed;
       }
 

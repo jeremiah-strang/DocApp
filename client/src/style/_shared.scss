@@ -444,3 +444,13 @@ ul, ol, li {
     background-color: #999;
   }
 }
+
+.input-wrap {
+  @extend .pnl;
+  @extend .w100;
+  display: block;
+
+  input {
+    @extend .box;
+  }
+}
