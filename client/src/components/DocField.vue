@@ -26,28 +26,19 @@
       },
 
       text: function () {
-        let text
         switch (this.docField.type) {
           case 'text':
-            text = 'Example text'
-            break
+            return 'Example text'
           case 'number':
-            text = '123.45'
-            break
+            return '123.45'
           case 'date':
-            text = '1/1/2017'
-            break
+            return '1/1/2017'
           case 'phone':
-            text = '555-555-1234'
-            break
+            return '555-555-1234'
           case 'drawing':
-            text = 'Signature'
-            break
-          default:
-            text = ''
-            break
+            return 'Signature'
         }
-        return text
+        return ''
       },
     },
     methods: {
@@ -58,6 +49,7 @@
       // }
     },
     mounted: function () {
+      // make the field draggable and resizable
       interact(this.$refs.docFieldEl)
         .draggable({
           inertia: false,
@@ -71,8 +63,6 @@
             if (this.$refs.docFieldEl) {
               let x = (parseFloat(this.$refs.docFieldEl.getAttribute('data-x')) || 0) + event.dx
               let y = (parseFloat(this.$refs.docFieldEl.getAttribute('data-y')) || 0) + event.dy
-              // this.$refs.docFieldEl.style.top = y + 'px'
-              // this.$refs.docFieldEl.style.left = x + 'px'
               this.$refs.docFieldEl.style.left = x + 'px'
               this.$refs.docFieldEl.style.top = y + 'px'
               this.$refs.docFieldEl.setAttribute('data-x', x)
@@ -93,8 +83,8 @@
         })
         .on('resizemove', (event) => {
           let target = event.target
-          target.style.height = '' + event.rect.height + 'px'
-          target.style.width = '' + event.rect.width + 'px'
+          target.style.height = event.rect.height + 'px'
+          target.style.width = event.rect.width + 'px'
           this.docField.height = event.rect.height
           this.docField.width = event.rect.width
         })
