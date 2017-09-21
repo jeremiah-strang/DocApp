@@ -112,6 +112,7 @@
     z-index: 1;
 
     &.selected {
+      @extend .shadowed;
       background-color: rgba($theme-color, 0.15);
       border-color: rgba($theme-color, 0.5);
 

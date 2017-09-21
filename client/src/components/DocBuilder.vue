@@ -294,6 +294,7 @@
    */
   const getSnapLine = (pos, snapLines, snapRange) => {
     let snap = snapLines.find(line => { return Math.abs(line - pos) <= snapRange })
+    console.log(JSON.stringify(snapLines, null, '  '))
     if (!snap) {
       snapLines.push(pos)
       return pos
