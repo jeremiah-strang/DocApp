@@ -420,7 +420,7 @@
       color: $font-dark;
       overflow: hidden;
       padding: 2px 4px;
-      width: 850px;
+      width: 852px;
     }
 
     .settings-wrap {
@@ -445,8 +445,8 @@
       background-color: #fff;
       border: 1px solid $gray6;
       display: inline-block;
-      min-height: 1100px;
-      min-width: 850px;
+      min-height: 1102px;
+      min-width: 852px;
 
       .doc-builder-img {
         @extend .box;
