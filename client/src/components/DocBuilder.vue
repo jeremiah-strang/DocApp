@@ -15,7 +15,7 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item"></doc-field>
+      <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"></doc-field>
 
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
@@ -35,6 +35,7 @@
 
 <script>
   const $ = require('jquery')
+  import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
   import DocField from '@/components/DocField'
 
@@ -52,6 +53,9 @@
     },
     methods: {
 
+      /*
+       * Converts the selected PDF template file to .png and renders it on the design surface
+       */
       uploadFormSubmit: function (e) {
         e.preventDefault()
 
@@ -67,6 +71,25 @@
             this.showEditor = true
           }
         })
+      },
+
+      /*
+       * Converts the selected PDF template file to .png and renders it on the design surface
+       */
+      addDocField: function (toolboxTool) {
+        this.docFields.forEach(df => { df.selected = false })
+        let toolPos = getPositioning(toolboxTool, this.$refs.docBuilderSurface)
+        let docField = {
+          uuid: uuidv4(),
+          type: toolboxTool.getAttribute('data-field-type'),
+          x: toolPos.left + 'px',
+          y: toolPos.top + 'px',
+          height: toolboxTool.style.height,
+          width: toolboxTool.style.width,
+          text: toolboxTool.innerHTML,
+          selected: true,
+        }
+        this.docFields.push(docField)
       },
     },
     mounted: function () {
@@ -93,21 +116,23 @@
             }
           },
           onend: (event) => {
-            if (draggingTool) {
-              draggingTool.classList.remove('dragging')
-              if (draggingTool.classList.contains('active')) {
-                draggingTool.classList.add('selected')
-                // interact(draggingTool)
-              } else {
-                this.$refs.docBuilder.removeChild(draggingTool)
-              }
-            }
+            this.addDocField(draggingTool)
+            this.$refs.docBuilder.removeChild(draggingTool)
+            // if (draggingTool) {
+            //   draggingTool.classList.remove('dragging')
+            //   if (draggingTool.classList.contains('active')) {
+            //     draggingTool.classList.add('selected')
+            //     // interact(draggingTool)
+            //   } else {
+            //     this.$refs.docBuilder.removeChild(draggingTool)
+            //   }
+            // }
           }
         })
         .on('dragstart', (event) => {
           let target = event.target
           if (!target.dragOrigin) {
-            let targetOffset = getOffset(target, this.$refs.docBuilder)
+            let targetOffset = getPositioning(target, this.$refs.docBuilder)
             draggingTool = target.cloneNode(true)
             draggingTool.classList.add('dragging')
             draggingTool.style.position = 'absolute'
@@ -189,15 +214,17 @@
   /**
    * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
    */
-  const getOffset = (el, subtractEl) => {
+  const getPositioning = (el, subtractEl) => {
     el = el.getBoundingClientRect()
     let result = {
       left: el.left + window.scrollX,
       top: el.top + window.scrollY,
+      width: el.width,
+      height: el.height,
     }
 
     if (subtractEl) {
-      subtractEl = getOffset(subtractEl)
+      subtractEl = getPositioning(subtractEl)
       result.left -= subtractEl.left
       result.top -= subtractEl.top
     }
