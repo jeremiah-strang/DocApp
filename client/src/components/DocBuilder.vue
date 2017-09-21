@@ -16,7 +16,7 @@
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
-                 :on-select="onSelectDocField" :id="item.uuid" 
+                 :on-select="onSelectDocField" :id="'_' + item.uuid" 
                  v-on:delete-doc-field="onDeleteDocField(item, index)">
       </doc-field>
 
@@ -136,6 +136,61 @@
         }
         this.onSelectDocField(docField)
         this.docFields.push(docField)
+
+        this.$nextTick(() => {
+          interact('#_' + docField.uuid)
+            .draggable({
+              inertia: false,
+              restrict: {
+                restriction: 'parent',
+                endOnly: true,
+                elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+              },
+              autoScroll: true,
+              onmove: (event) => {
+                let x = (parseFloat(event.target.getAttribute('data-x')) || 0) + event.dx
+                let y = (parseFloat(event.target.getAttribute('data-y')) || 0) + event.dy
+                event.target.style.left = x + 'px'
+                event.target.style.top = y + 'px'
+                event.target.setAttribute('data-x', x)
+                event.target.setAttribute('data-y', y)
+                this.selectedDocField.x = x
+                this.selectedDocField.y = y
+              },
+              onend: (event) => {
+                let x = this.selectedDocField.x
+                let y = this.selectedDocField.y
+                x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
+                y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
+                event.target.style.left = x + 'px'
+                event.target.style.top = y + 'px'
+                event.target.setAttribute('data-x', x)
+                event.target.setAttribute('data-y', y)
+                this.selectedDocField.x = x
+                this.selectedDocField.y = y
+              }
+            })
+            .on('dragstart', (event) => {
+              event.target.setAttribute('data-x', this.selectedDocField.x)
+              event.target.setAttribute('data-y', this.selectedDocField.y)
+              if (typeof this.onSelect === 'function') {
+                this.onSelect(this.selectedDocField)
+              }
+            })
+            .resizable({
+              edges: { right: true },
+            })
+            .on('resizemove', (event) => {
+              let target = event.target
+              if (typeof this.onSelect === 'function') {
+                this.onSelect(this.selectedDocField)
+              }
+              target.style.height = event.rect.height + 'px'
+              target.style.width = event.rect.width + 'px'
+              this.selectedDocField.height = event.rect.height
+              this.selectedDocField.width = event.rect.width
+            })
+        })
       },
 
       /*
