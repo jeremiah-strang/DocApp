@@ -38,9 +38,6 @@
       },
     },
     created: function () {
-      // if (this.docField) {
-      //   this.style =
-      // }
     },
     mounted: function () {
       // make the field draggable and resizable

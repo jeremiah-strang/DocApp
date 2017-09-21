@@ -137,13 +137,12 @@
           x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX),
           y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY),
           height: toolboxTool.style.height,
-          width: this.sharedDocFieldProps[type].width, // toolboxTool.style.width,
+          width: this.sharedDocFieldProps[type].width,
           text: getDefaultFieldText(type),
           selected: true,
         }
         this.onSelectDocField(docField)
         this.docFields.push(docField)
-        console.log(docField)
 
         this.$nextTick(() => {
           interact('#_' + docField.uuid)
@@ -157,8 +156,6 @@
               autoScroll: true,
               onmove: (event) => {
                 let target = event.target
-                // let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-                // let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
                 let x = this.selectedDocField.x + event.dx
                 let y = this.selectedDocField.y + event.dy
                 target.style.left = x + 'px'
@@ -179,9 +176,6 @@
               }
             })
             .on('dragstart', (event) => {
-              let target = event.target
-              target.setAttribute('data-x', this.selectedDocField.x)
-              target.setAttribute('data-y', this.selectedDocField.y)
               if (typeof this.onSelect === 'function') {
                 this.onSelect(this.selectedDocField)
               }
@@ -387,8 +381,8 @@
 
     .surface-toolbar {
       @extend .pnl;
-      background-color: $gray3;
-      border-color: $gray5;
+      background-color: $gray2;
+      border-color: $gray6;
       border-style: solid;
       border-top-left-radius: 6px;
       border-top-right-radius: 6px;
@@ -419,7 +413,7 @@
       @extend .pnl;
       @extend .shadowed;
       background-color: #fff;
-      border: 1px solid $gray3;
+      border: 1px solid $gray6;
       display: inline-block;
       min-height: 1100px;
       min-width: 850px;
