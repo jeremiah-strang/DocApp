@@ -84,7 +84,6 @@
           target.style.width = event.rect.width + 'px'
           this.docField.height = event.rect.height
           this.docField.width = event.rect.width
-          console.log(this.docField.height)
         })
     },
     components: {
