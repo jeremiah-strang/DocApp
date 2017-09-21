@@ -378,6 +378,7 @@
     @extend .pnl;
     @extend .hw100;
     @extend .pad1;
+    @extend .prevent-highlight;
 
     .surface-toolbar {
       @extend .pnl;

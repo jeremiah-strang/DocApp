@@ -377,6 +377,15 @@ ul, ol, li {
   }
 }
 
+.prevent-highlight {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .checkbox-wrap,
 .radio-wrap {
   label {
@@ -419,9 +428,9 @@ ul, ol, li {
   }
 
   input[type=checkbox]:checked + label:before {
-    background-color: #999;
+    background-color: #777;
     border: 1px solid #bbb;
-    color: #f3f3f3;
+    color: lighten($theme-blue, 35%);
     content: '\2713';
     font-size: 15px;
     font-weight: bold;
