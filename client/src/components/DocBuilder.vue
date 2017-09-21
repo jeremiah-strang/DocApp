@@ -20,7 +20,7 @@
 
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
-      <div class="toolbox-wrap">
+      <div class="toolbox-tool-wrap toolbox-wrap">
         <div class="toolbox-hdr">Toolbox</div>
         <div ref="toolbox" class="toolbox">
           <div class="toolbox-tool" data-field-type="text">Text</div>
@@ -28,6 +28,14 @@
           <div class="toolbox-tool" data-field-type="date">Date</div>
           <div class="toolbox-tool" data-field-type="phone">Phone</div>
           <div class="toolbox-tool" data-field-type="drawing">Signature/Drawing</div>
+        </div>
+      </div>
+
+      <div v-if="selectedDocField.selected" class="field-editor-wrap toolbox-wrap">
+        <div class="toolbox-hdr">Field Properties</div>
+        <div class="toolbox">
+          <h4>Field Name</h4>
+          <input v-model="selectedDocField.name" type="text">
         </div>
       </div>
     </div>
@@ -48,6 +56,19 @@
         previewImageSrc: '',
         name: '',
         docFields: [],
+        snapLinesX: [],
+        snapLinesY: [],
+        selectedDocField: {
+          name: '',
+          selected: false,
+        },
+        sharedDocFieldProps: {
+          text: getDefaultSharedProps(),
+          number: getDefaultSharedProps(),
+          date: getDefaultSharedProps(),
+          phone: getDefaultSharedProps(),
+          drawing: getDefaultSharedProps(),
+        },
       }
     },
     watch: {
@@ -75,28 +96,38 @@
       },
 
       /*
-       * Converts the selected PDF template file to .png and renders it on the design surface
+       * Converts a toolbox tool element to a doc field component and adds it to the document
        */
       addDocField: function (toolboxTool) {
         let toolPos = getPositioning(toolboxTool, this.$refs.docBuilderSurface)
+        let type = toolboxTool.getAttribute('data-field-type')
+        this.sharedDocFieldProps[type].count
+        let name = type.substring(0, 1).toUpperCase() + type.substring(1, type.length) + ' Field ' +
+          (++this.sharedDocFieldProps[type].count)
+
         let docField = {
+          name: name,
           uuid: uuidv4(),
-          type: toolboxTool.getAttribute('data-field-type'),
-          x: toolPos.left,
-          y: toolPos.top,
+          type: type,
+          x: getSnapLine(toolPos.left, this.snapLinesX, snapRangeX),
+          y: getSnapLine(toolPos.top, this.snapLinesY, snapRangeY),
           height: toolboxTool.style.height,
           width: toolboxTool.style.width,
-          text: toolboxTool.innerHTML,
+          text: getDefaultFieldText(type),
           selected: true,
         }
         this.onSelectDocField(docField)
         this.docFields.push(docField)
       },
 
+      /*
+       * Updates the current doc field selection and loads its properties
+       */
       onSelectDocField: function (docField) {
         this.docFields.forEach(df => {
           df.selected = df.uuid === docField.uuid
         })
+        this.selectedDocField = docField
       },
     },
     mounted: function () {
@@ -218,6 +249,9 @@
     }
   }
 
+  const snapRangeX = 10
+  const snapRangeY = 10
+
   /**
    * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
    */
@@ -236,6 +270,50 @@
       result.top -= subtractEl.top
     }
     return result
+  }
+
+  /**
+   *
+   */
+  const getSnapLine = (pos, snapLines, snapRange) => {
+    let snap = snapLines.find(line => { return Math.abs(line - pos) <= snapRange })
+    if (!snap) {
+      snapLines.push(pos)
+      return pos
+    }
+    return snap
+  }
+
+  /**
+   *
+   */
+  const getDefaultSharedProps = () => {
+    return {
+      count: 0,
+      lastWidth: 0,
+      lastHeight: 0,
+      lastFont: 'Helvetica',
+      lastFontSize: 12,
+    }
+  }
+
+  /**
+   *
+   */
+  const getDefaultFieldText = (docFieldType) => {
+    switch (docFieldType) {
+      case 'text':
+        return 'Example text'
+      case 'number':
+        return '123.45'
+      case 'date':
+        return '1/1/2017'
+      case 'phone':
+        return '555-555-1234'
+      case 'drawing':
+        return 'Signature/Drawing'
+    }
+    return ''
   }
 </script>
 
@@ -284,7 +362,6 @@
       border-radius: 8px;
       left: 914px;
       position: fixed;
-      top: 80px;
       width: 200px;
 
       .toolbox-hdr {
@@ -297,10 +374,27 @@
 
       .toolbox {
         @extend .pnl;
+        color: $font-light;
         height: 100%;
         overflow: visible;
         padding: 6px;
         width: 100%;
+
+        input {
+          @extend .box;
+          width: 100%;
+        }
+      }
+    }
+
+    .field-editor-wrap {
+      top: 280px;
+    }
+
+    .toolbox-tool-wrap {
+      top: 80px;
+
+      .toolbox {
       }
     }
 

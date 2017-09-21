@@ -1,6 +1,6 @@
 <template>
   <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
-    v-on:click="onClick" class="doc-field">{{ text }}</div>
+    v-on:click="onClick" class="doc-field">{{ docField.text }}</div>
 </template>
 
 <script>
@@ -25,22 +25,6 @@
       style: function () {
         return `width: ${this.docField.width}; height: ${this.docField.height}; ` +
           `top: ${this.docField.y}px; left: ${this.docField.x}px;`
-      },
-
-      text: function () {
-        switch (this.docField.type) {
-          case 'text':
-            return 'Example text'
-          case 'number':
-            return '123.45'
-          case 'date':
-            return '1/1/2017'
-          case 'phone':
-            return '555-555-1234'
-          case 'drawing':
-            return 'Signature'
-        }
-        return ''
       },
     },
     methods: {
@@ -84,6 +68,9 @@
         .on('dragstart', (event) => {
           this.$refs.docFieldEl.setAttribute('data-x', this.docField.x)
           this.$refs.docFieldEl.setAttribute('data-y', this.docField.y)
+          if (typeof this.onSelect === 'function') {
+            this.onSelect(this.docField)
+          }
         })
         .resizable({
           edges: { right: true },

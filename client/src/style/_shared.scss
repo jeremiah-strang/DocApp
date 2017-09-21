@@ -167,9 +167,10 @@ input[type=password],
 input[type=number],
 textarea {
   @extend .box;
+  border-radius: 4px;
   color: $dark1;
   font-size: $font-size;
-  padding: 4px;
+  padding: 2px;
   background-color: $gray1;
   border: 1px solid $border-color;
   font-family: $font-stack;
