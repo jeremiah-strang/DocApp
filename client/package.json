@@ -16,6 +16,7 @@
   "dependencies": {
     "interact.js": "^1.2.8",
     "jquery": "^3.2.1",
+    "pdfjs-dist": "^1.9.583",
     "uuid": "^3.1.0",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",

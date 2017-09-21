@@ -9,7 +9,7 @@
         <label class="settings-label float-left">Template File</label>
         <form ref="uploadForm" v-on:submit="uploadFormSubmit" class="float-left"
               action="/api/useruploads/" method="POST" enctype="multipart/form-data">
-          <input name="file" v-on:change="uploadFormSubmit" type="file"><br>
+          <input ref="fileUploadInput" name="file" v-on:change="uploadFormSubmit" type="file"><br>
         </form>
       </div>
     </div>
@@ -27,7 +27,8 @@
                  v-on:delete-doc-field="onDeleteDocField(item, index)">
       </doc-field>
 
-      <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
+      <canvas ref="docBuilderCanvas" v-show="showEditor" class="doc-builder-img"
+              height="1100" width="850"></canvas>
 
       <div class="toolbox-tool-wrap toolbox-wrap">
         <div class="toolbox-hdr">Toolbox</div>
@@ -68,6 +69,8 @@
   import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
   import utils from '../utils/utils'
+  import pdfjs from 'pdfjs-dist'
+  pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
   import DocField from '@/components/DocField'
 
   const snapRangeX = 10
@@ -105,19 +108,46 @@
        */
       uploadFormSubmit: function (e) {
         e.preventDefault()
+        let fileInput = $(this.$refs.fileUploadInput)
+        let fileType = fileInput.get(0).files[0].type
+        console.log('fileType: ' + fileType)
+        if (fileType === 'application/pdf') {
+          // let pdfUrl = URL.createObjectURL(fileInput.get(0).files[0])
 
-        $.ajax({
-          url: '/api/useruploads/',
-          type: 'POST',
-          data: new FormData(this.$refs.uploadForm),
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: (data) => {
-            this.previewImageSrc = 'data:image/png;base64, ' + data
-            this.showEditor = true
-          }
-        })
+          pdfjs.getDocument({ url: URL.createObjectURL(fileInput.get(0).files[0]) })
+          .then((pdfDoc) => {
+            // let pageCt = pdfDoc.numPages
+            pdfDoc.getPage(1).then((page) => {
+              let canvas = this.$refs.docBuilderCanvas
+              let scale = canvas.width / page.getViewport(1).width
+              console.log(scale)
+              let viewport = page.getViewport(scale)
+              canvas.height = viewport.height
+
+              let renderContext = {
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport
+              }
+              page.render(renderContext).then(() => {
+                $(canvas).show()
+              })
+            })
+          }).catch(err => {
+            console.error(err)
+          })
+        }
+        // $.ajax({
+        //   url: '/api/useruploads/',
+        //   type: 'POST',
+        //   data: new FormData(this.$refs.uploadForm),
+        //   cache: false,
+        //   contentType: false,
+        //   processData: false,
+        //   success: (data) => {
+        //     this.previewImageSrc = 'data:image/png;base64, ' + data
+        //     this.showEditor = true
+        //   }
+        // })
       },
 
       /*
@@ -229,7 +259,7 @@
     },
     mounted: function () {
       let draggingTool
-
+      console.log(pdfjs.PDFJS)
       // set up ability to drag toolbox tools onto the doc builder surface
       interact('.toolbox-tool')
         .draggable({
@@ -390,7 +420,7 @@
       color: $font-dark;
       overflow: hidden;
       padding: 2px 4px;
-      width: 816px;
+      width: 850px;
     }
 
     .settings-wrap {
@@ -415,13 +445,13 @@
       background-color: #fff;
       border: 1px solid $gray6;
       display: inline-block;
-      min-height: 1056px;
-      min-width: 816px;
+      min-height: 1100px;
+      min-width: 850px;
 
-      img.doc-builder-img {
+      .doc-builder-img {
         @extend .box;
-        height: 1056px;
-        width: 816px;
+        // height: 1100px;
+        // width: 850px;
       }
     }
 
