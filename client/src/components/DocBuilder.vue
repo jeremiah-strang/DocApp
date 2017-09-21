@@ -1,20 +1,30 @@
 <template>
   <div ref="docBuilder" class="doc-builder">
+    <div class="settings-wrap">
+      <div class="panel-wrapper">
+        <label class="settings-label float-left">Document Name</label>
+        <input v-model="name" type="text">
+      </div>
+      <div class="panel-wrapper">
+        <label class="settings-label float-left">Template File</label>
+        <form ref="uploadForm" v-on:submit="uploadFormSubmit" class="float-left"
+              action="/api/useruploads/" method="POST" enctype="multipart/form-data">
+          <input name="file" v-on:change="uploadFormSubmit" type="file"><br>
+        </form>
+      </div>
+    </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
-      <form ref="uploadForm"
-            v-on:submit="uploadFormSubmit"
-            v-show="!showEditor"
-            action="/api/useruploads/" method="POST" enctype="multipart/form-data">
-        <input name="file" v-on:change="uploadFormSubmit" type="file"><br>
-      </form>
+
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
-      <div v-show="showEditor" class="toolbox-wrap">
+      <div class="toolbox-wrap">
         <div class="toolbox-hdr">Toolbox</div>
         <div ref="toolbox" class="toolbox">
-          <div class="toolbox-tool">Text Input</div>
-          <div class="toolbox-tool">Number Input</div>
-          <div class="toolbox-tool">Date Input</div>
+          <div class="toolbox-tool" data-field-type="text">Text</div>
+          <div class="toolbox-tool" data-field-type="number">Number</div>
+          <div class="toolbox-tool" data-field-type="date">Date</div>
+          <div class="toolbox-tool" data-field-type="phone">Phone</div>
+          <div class="toolbox-tool" data-field-type="drawing">Signature/Drawing</div>
         </div>
       </div>
     </div>
@@ -25,30 +35,14 @@
   const $ = require('jquery')
   const interact = require('interact.js')
 
-  /**
-   * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
-   */
-  const getOffset = (el, subtractEl) => {
-    el = el.getBoundingClientRect()
-    let result = {
-      left: el.left + window.scrollX,
-      top: el.top + window.scrollY,
-    }
-
-    if (subtractEl) {
-      subtractEl = getOffset(subtractEl)
-      result.left -= subtractEl.left
-      result.top -= subtractEl.top
-    }
-    return result
-  }
-
   export default {
     name: 'doc-builder',
     data () {
       return {
         showEditor: false,
         previewImageSrc: '',
+        name: '',
+
       }
     },
     watch: {
@@ -138,6 +132,7 @@
           target.style.height = '' + parseInt(event.rect.height) + 'px'
           target.style.width = '' + parseInt(event.rect.width) + 'px'
         })
+
       // make the doc builder surface a dropzone
       interact('.doc-builder-surface').dropzone({
         accept: '.toolbox-tool',
@@ -165,7 +160,7 @@
       // make the toolbox draggable
       interact('.toolbox-hdr')
         .draggable({
-          inertia: false,
+          inertia: true,
           restrict: {
             restriction: this.$refs.docBuilder,
             endOnly: true,
@@ -186,6 +181,24 @@
     components: {
     }
   }
+
+  /**
+   * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
+   */
+  const getOffset = (el, subtractEl) => {
+    el = el.getBoundingClientRect()
+    let result = {
+      left: el.left + window.scrollX,
+      top: el.top + window.scrollY,
+    }
+
+    if (subtractEl) {
+      subtractEl = getOffset(subtractEl)
+      result.left -= subtractEl.left
+      result.top -= subtractEl.top
+    }
+    return result
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -196,6 +209,21 @@
     @extend .hw100;
     @extend .pad1;
 
+    .settings-wrap {
+      @extend .pnl;
+      // @extend .w100;
+      @extend .pad1;
+      @extend .shadowed;
+      background-color: $dark1;
+      color: $font-light;
+      margin-bottom: 9px;
+      width: 1062px;
+
+      .settings-label {
+        width: 124px;
+      }
+    }
+
     .doc-builder-surface {
       @extend .pnl;
       @extend .shadowed;
@@ -204,13 +232,6 @@
       display: inline-block;
       min-height: 1100px;
       min-width: 850px;
-
-      form {
-        display: inline-block;
-        padding-top: 50px;
-        text-align: center;
-        width: 100%;
-      }
 
       img.doc-builder-img {
         @extend .box;
@@ -223,10 +244,9 @@
       @extend .shadowed;
       background-color: $dark1;
       border-radius: 8px;
-      border: 1px solid $dark10;
       left: 914px;
       position: fixed;
-      top: 9px;
+      top: 80px;
       width: 200px;
 
       .toolbox-hdr {
