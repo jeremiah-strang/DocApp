@@ -26,8 +26,8 @@
     },
     computed: {
       style: function () {
-        return `width: ${this.docField.width}; height: ${this.docField.height}; ` +
-          `top: ${this.docField.y}px; left: ${this.docField.x}px;`
+        return `width:${parseInt(this.docField.width)}px;height:${parseInt(this.docField.height)}px;` +
+               `top:${this.docField.y}px;left:${this.docField.x}px;`
       },
     },
     methods: {

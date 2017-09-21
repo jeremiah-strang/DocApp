@@ -13,6 +13,13 @@
         </form>
       </div>
     </div>
+
+    <div class="surface-toolbar">
+      <div class="checkbox-wrap">
+        <input id="show-snap-lines-chk" type="checkbox">
+        <label for="show-snap-lines-chk">Show Snap Lines</label>
+      </div>
+    </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
@@ -130,12 +137,13 @@
           x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX),
           y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY),
           height: toolboxTool.style.height,
-          width: toolboxTool.style.width,
+          width: this.sharedDocFieldProps[type].width, // toolboxTool.style.width,
           text: getDefaultFieldText(type),
           selected: true,
         }
         this.onSelectDocField(docField)
         this.docFields.push(docField)
+        console.log(docField)
 
         this.$nextTick(() => {
           interact('#_' + docField.uuid)
@@ -148,31 +156,32 @@
               },
               autoScroll: true,
               onmove: (event) => {
-                let x = (parseFloat(event.target.getAttribute('data-x')) || 0) + event.dx
-                let y = (parseFloat(event.target.getAttribute('data-y')) || 0) + event.dy
-                event.target.style.left = x + 'px'
-                event.target.style.top = y + 'px'
-                event.target.setAttribute('data-x', x)
-                event.target.setAttribute('data-y', y)
+                let target = event.target
+                // let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+                // let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+                let x = this.selectedDocField.x + event.dx
+                let y = this.selectedDocField.y + event.dy
+                target.style.left = x + 'px'
+                target.style.top = y + 'px'
                 this.selectedDocField.x = x
                 this.selectedDocField.y = y
               },
               onend: (event) => {
+                let target = event.target
                 let x = this.selectedDocField.x
                 let y = this.selectedDocField.y
                 x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
                 y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
-                event.target.style.left = x + 'px'
-                event.target.style.top = y + 'px'
-                event.target.setAttribute('data-x', x)
-                event.target.setAttribute('data-y', y)
+                target.style.left = x + 'px'
+                target.style.top = y + 'px'
                 this.selectedDocField.x = x
                 this.selectedDocField.y = y
               }
             })
             .on('dragstart', (event) => {
-              event.target.setAttribute('data-x', this.selectedDocField.x)
-              event.target.setAttribute('data-y', this.selectedDocField.y)
+              let target = event.target
+              target.setAttribute('data-x', this.selectedDocField.x)
+              target.setAttribute('data-y', this.selectedDocField.y)
               if (typeof this.onSelect === 'function') {
                 this.onSelect(this.selectedDocField)
               }
@@ -189,6 +198,10 @@
               target.style.width = event.rect.width + 'px'
               this.selectedDocField.height = event.rect.height
               this.selectedDocField.width = event.rect.width
+
+              let type = this.selectedDocField.type
+              this.sharedDocFieldProps[type].height = this.selectedDocField.height
+              this.sharedDocFieldProps[type].width = this.selectedDocField.width
             })
         })
       },
@@ -337,10 +350,10 @@
   const getDefaultSharedProps = () => {
     return {
       count: 0,
-      width: 0,
+      width: 188,
       height: 0,
-      lastFont: 'Helvetica',
-      lastFontSize: 12,
+      font: 'Helvetica',
+      fontSize: 12,
     }
   }
 
@@ -371,6 +384,20 @@
     @extend .pnl;
     @extend .hw100;
     @extend .pad1;
+
+    .surface-toolbar {
+      @extend .pnl;
+      background-color: $gray3;
+      border-color: $gray5;
+      border-style: solid;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      border-width: 1px 1px 0 1px;
+      color: $font-dark;
+      overflow: hidden;
+      padding: 2px 4px;
+      width: 850px;
+    }
 
     .settings-wrap {
       @extend .pnl;
@@ -436,11 +463,11 @@
     }
 
     .field-editor-wrap {
-      top: 288px;
+      top: 285px;
     }
 
     .toolbox-tool-wrap {
-      top: 80px;
+      top: 77px;
     }
 
     .toolbox-tool {
