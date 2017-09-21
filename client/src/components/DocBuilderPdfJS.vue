@@ -16,11 +16,14 @@
 
     <div class="surface-toolbar">
       <div class="checkbox-wrap">
-        <input id="show-snap-lines-chk" type="checkbox">
+        <input v-model="showSnapLines" id="show-snap-lines-chk" type="checkbox">
         <label for="show-snap-lines-chk">Show Snap Lines</label>
       </div>
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
+
+      <div v-show="showSnapLines" v-for="line in snapLinesY" :style="'top:' + line + 'px'" class="snap-line-x"></div>
+      <div v-show="showSnapLines" v-for="line in snapLinesX" :style="'left:' + line + 'px'" class="snap-line-y"></div>
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
                  :on-select="onSelectDocField" :id="'_' + item.uuid" 
@@ -81,6 +84,7 @@
     data () {
       return {
         showEditor: false,
+        showSnapLines: false,
         previewImageSrc: '',
         name: '',
         docFields: [],
@@ -449,6 +453,23 @@
         @extend .box;
         // height: 1100px;
         // width: 850px;
+      }
+
+      .snap-line-x,
+      .snap-line-y {
+        position: absolute;
+        border-color: rgba($theme-color, 0.5);
+        border-style: dashed;
+        z-index: 2;
+      }
+      .snap-line-x {
+        border-width: 0 0 2px 0;
+        height: 0;
+        width: 100%;
+      }
+      .snap-line-y {
+        border-width: 0 2px 0 0;
+        height: 100%;
       }
     }
 
