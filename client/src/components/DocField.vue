@@ -1,15 +1,17 @@
 <template>
   <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
-    class="doc-field">{{ text }}</div>
+    v-on:click="onClick" class="doc-field">{{ text }}</div>
 </template>
 
 <script>
-  // const interact = require('interact.js')
   import interact from 'interact.js'
+  // import Vue from 'vue'
+  // import Vuex from 'vuex'
+  // Vue.use(Vuex)
 
   export default {
     name: 'doc-field',
-    props: ['docField'],
+    props: ['docField', 'onSelect'],
     data () {
       return {
         name: '',
@@ -42,6 +44,11 @@
       },
     },
     methods: {
+      onClick: function () {
+        if (typeof this.onSelect === 'function') {
+          this.onSelect(this.docField)
+        }
+      },
     },
     created: function () {
       // if (this.docField) {

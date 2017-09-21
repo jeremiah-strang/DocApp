@@ -15,7 +15,8 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"></doc-field>
+      <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
+                 :on-select="onSelectDocField"></doc-field>
 
       <img v-show="showEditor" class="doc-builder-img" :src="previewImageSrc"/>
 
@@ -77,7 +78,6 @@
        * Converts the selected PDF template file to .png and renders it on the design surface
        */
       addDocField: function (toolboxTool) {
-        this.docFields.forEach(df => { df.selected = false })
         let toolPos = getPositioning(toolboxTool, this.$refs.docBuilderSurface)
         let docField = {
           uuid: uuidv4(),
@@ -89,7 +89,14 @@
           text: toolboxTool.innerHTML,
           selected: true,
         }
+        this.onSelectDocField(docField)
         this.docFields.push(docField)
+      },
+
+      onSelectDocField: function (docField) {
+        this.docFields.forEach(df => {
+          df.selected = df.uuid === docField.uuid
+        })
       },
     },
     mounted: function () {
