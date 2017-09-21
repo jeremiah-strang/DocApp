@@ -80,6 +80,9 @@
         })
         .on('resizemove', (event) => {
           let target = event.target
+          if (typeof this.onSelect === 'function') {
+            this.onSelect(this.docField)
+          }
           target.style.height = event.rect.height + 'px'
           target.style.width = event.rect.width + 'px'
           this.docField.height = event.rect.height

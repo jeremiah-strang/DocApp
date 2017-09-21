@@ -47,7 +47,7 @@
   import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
   import DocField from '@/components/DocField'
-
+  
   export default {
     name: 'doc-builder',
     data () {
@@ -307,8 +307,8 @@
   const getDefaultSharedProps = () => {
     return {
       count: 0,
-      lastWidth: 0,
-      lastHeight: 0,
+      width: 0,
+      height: 0,
       lastFont: 'Helvetica',
       lastFontSize: 12,
     }
