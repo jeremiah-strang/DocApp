@@ -22,8 +22,14 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <div v-show="showSnapLines" v-for="line in snapLinesY" :style="'top:' + line + 'px'" class="snap-line-x"></div>
-      <div v-show="showSnapLines" v-for="line in snapLinesX" :style="'left:' + line + 'px'" class="snap-line-y"></div>
+      <div v-show="showSnapLines" v-for="line in snapLinesY" :style="'top:' + line + 'px'" 
+           class="snap-line-y">
+        <i class="fa fa-caret-right"></i>       
+      </div>
+      <div v-show="showSnapLines" v-for="line in snapLinesX" :style="'left:' + line + 'px'"
+           class="snap-line-x">
+        <i class="fa fa-caret-down"></i>    
+      </div>
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
                  :on-select="onSelectDocField" :id="'_' + item.uuid" 
@@ -101,6 +107,9 @@
           phone: getDefaultSharedProps(),
           drawing: getDefaultSharedProps(),
         },
+        toolInteractable: null,
+        dropzoneInteractable: null,
+        toolboxInteractable: null,
       }
     },
     watch: {
@@ -177,7 +186,7 @@
         this.docFields.push(docField)
 
         this.$nextTick(() => {
-          interact('#_' + docField.uuid)
+          docField.interactable = interact('#_' + docField.uuid)
             .draggable({
               inertia: false,
               restrict: {
@@ -262,7 +271,7 @@
     mounted: function () {
       // set up ability to drag toolbox tools onto the doc builder surface
       let draggingTool
-      interact('.toolbox-tool')
+      this.toolInteractable = interact('.toolbox-tool')
         .draggable({
           inertia: false,
           restrict: {
@@ -320,7 +329,7 @@
         })
 
       // make the doc builder surface a dropzone
-      interact('.doc-builder-surface').dropzone({
+      this.dropzoneInteractable = interact('.doc-builder-surface').dropzone({
         accept: '.toolbox-tool',
         overlap: 0.75,
         ondropactivate: function (event) {
@@ -344,7 +353,7 @@
       })
 
       // make the toolbox draggable
-      interact('.toolbox-hdr')
+      this.toolboxInteractable = interact('.toolbox-hdr')
         .draggable({
           inertia: true,
           restrict: {
@@ -364,8 +373,26 @@
           },
         })
     },
+    beforeDestroy: function () {
+      this.docFields.map(docField => { return docField.interactable }).forEach(interactable => {
+        unset(interactable)
+      })
+
+      unset(this.toolInteractable)
+      unset(this.dropzoneInteractable)
+      unset(this.toolboxInteractable)
+    },
     components: {
       DocField
+    }
+  }
+
+  /**
+   *
+   */
+  const unset = (interactable) => {
+    if (typeof interactable === 'object' && typeof interactable.unset === 'function') {
+      interactable.unset()
     }
   }
 
@@ -409,6 +436,7 @@
     @extend .pnl;
     @extend .hw100;
     @extend .pad1;
+    @extend .prevent-highlight;
 
     .surface-toolbar {
       @extend .pnl;
@@ -420,7 +448,7 @@
       border-width: 1px 1px 0 1px;
       color: $font-dark;
       overflow: hidden;
-      padding: 2px 4px;
+      padding: 6px 6px;
       width: 852px;
     }
 
@@ -448,6 +476,7 @@
       display: inline-block;
       min-height: 1102px;
       min-width: 852px;
+        overflow: visible;
 
       .doc-builder-img {
         @extend .box;
@@ -455,21 +484,35 @@
         // width: 850px;
       }
 
-      .snap-line-x,
-      .snap-line-y {
-        position: absolute;
+      .snap-line-y,
+      .snap-line-x {
         border-color: rgba($theme-color, 0.5);
         border-style: dashed;
+        position: absolute;
         z-index: 2;
+
+        i.fa {
+          color: $theme-color;
+        }
       }
-      .snap-line-x {
+      .snap-line-y {
         border-width: 0 0 2px 0;
         height: 0;
         width: 100%;
+        i.fa {
+          position: absolute;
+          top: -6.5px;
+          left: -5.5px;
+        }
       }
-      .snap-line-y {
+      .snap-line-x {
         border-width: 0 2px 0 0;
         height: 100%;
+        i.fa {
+          position: absolute;
+          top: -11px;
+          left: -3.5px;
+        }
       }
     }
 

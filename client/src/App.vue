@@ -4,7 +4,7 @@
 
       <div class="app-nav-toggle" v-on:click="toggleNav"><i class="fa fa-thumb-tack"></i></div>
 
-      <router-link to="/" title="Go to your dashboard">
+      <router-link to="/Dashboard" title="Go to your dashboard">
         <i class="fa fa-home"></i>
         <span v-show="isNavMaximized">Dashboard</span>
       </router-link>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="app-body" :class="isNavMaximized ? 'app-nav-maximized' : ''">
-      <router-view></router-view>
+      <router-view :key="$route.name"></router-view>
     </div>
   </div>
 </template>
@@ -40,6 +40,7 @@
     },
     methods: {
       toggleNav: function () {
+        console.log(this.$route)
         this.isNavMaximized = !this.isNavMaximized
         if (this.isNavMaximized) {
           this.appNavWidth = appNavWidth

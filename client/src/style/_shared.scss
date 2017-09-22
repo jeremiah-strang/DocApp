@@ -428,9 +428,9 @@ ul, ol, li {
   }
 
   input[type=checkbox]:checked + label:before {
-    background-color: #777;
-    border: 1px solid #bbb;
-    color: lighten($theme-blue, 35%);
+    background-color: $dark7;
+    border: 1px solid $dark4;
+    color: $font-light;
     content: '\2713';
     font-size: 15px;
     font-weight: bold;
