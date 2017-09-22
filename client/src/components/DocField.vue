@@ -1,7 +1,10 @@
 <template>
   <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
-       v-on:click="onClick" class="doc-field">
-    <span class="doc-field-text">{{ docField.text }}</span>&nbsp;
+       v-on:click="onClick" class="doc-field" :data-field-type="docField.type">
+    <i v-if="docField.type === 'check'" class="fa fa-check"></i>
+    <i v-if="docField.type === 'checkx'" class="fa fa-close"></i>
+    <i v-if="docField.type === 'checksq'" class="fa fa-square"></i>
+    <span v-else class="doc-field-text">{{ docField.text }}</span>&nbsp;
     <i v-on:click="$emit('delete-doc-field')" class="fa fa-trash"></i>
   </div>
 </template>
@@ -63,10 +66,22 @@
     position: absolute;
     z-index: 1;
 
+    &[data-field-type=check],
+    &[data-field-type=checkx],
+    &[data-field-type=checksq] {
+      border-color: transparent;
+    }
+
     &.selected {
       @extend .shadowed;
       background-color: rgba($theme-color, 0.15);
       border-color: rgba($theme-color, 0.15);
+
+      &[data-field-type=check],
+      &[data-field-type=checkx],
+      &[data-field-type=checksq] {
+        border-color: transparent;
+      }
 
       .fa.fa-trash {
         color: rgba($theme-color, 0.5);
@@ -83,6 +98,10 @@
       right: 3px;
       color: rgba($dark1, 0.5);
       cursor: pointer;
+    }
+
+    .fa.fa-square {
+      font-size: 12px;
     }
   }
 </style>

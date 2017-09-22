@@ -53,6 +53,17 @@
           <div class="toolbox-tool" data-field-type="date">Date</div>
           <div class="toolbox-tool" data-field-type="phone">Phone Number</div>
           <div class="toolbox-tool" data-field-type="drawing">Signature/Drawing</div>
+          <div style="width: 100%; clear: both; margin-bottom: 4px;"></div>
+          <div class="toolbox-tool float-left" data-field-type="check">
+            <i class="fa fa-check"></i>
+          </div>
+          <div class="toolbox-tool float-left" data-field-type="checkx">
+            <i class="fa fa-close"></i>
+          </div>
+          <div class="toolbox-tool float-left" data-field-type="checksq">
+            <i class="fa fa-square"></i>
+          </div>
+          <h4 class="float-left">&nbsp;Checkbox</h4>
         </div>
       </div>
 
@@ -144,6 +155,9 @@
           date: getDefaultSharedProps(),
           phone: getDefaultSharedProps(),
           drawing: getDefaultSharedProps(),
+          check: getDefaultSharedProps('check'),
+          checkx: getDefaultSharedProps('checkx'),
+          checksq: getDefaultSharedProps('checksq'),
         },
         toolInteractable: null,
         dropzoneInteractable: null,
@@ -374,16 +388,38 @@
           if (!target.dragOrigin) {
             draggingTool = target.cloneNode(true)
             let targetOffset = utils.getPositioning(target, this.$refs.docBuilder, this.$refs.docBuilder)
+            let fieldType = draggingTool.getAttribute('data-field-type')
             draggingTool.classList.add('dragging')
             draggingTool.style.position = 'absolute'
             draggingTool.style.top = targetOffset.top + 'px'
             draggingTool.style.left = targetOffset.left + 'px'
             draggingTool.style.width = target.getBoundingClientRect().width + 'px'
             draggingTool.dragOrigin = target
-            draggingTool.innerHTML = getDefaultFieldText({
-              type: draggingTool.getAttribute('data-field-type'),
-              ...getDefaultSharedProps()
-            })
+
+            if (fieldType !== 'check' && fieldType !== 'checkx' && fieldType !== 'checksq') {
+              draggingTool.innerHTML = getDefaultFieldText({
+                type: fieldType,
+                ...getDefaultSharedProps()
+              })
+            } else {
+              let icon = document.createElement('i')
+              let iconClass
+              switch (fieldType) {
+                case 'check':
+                  iconClass = 'fa-check'
+                  break
+                case 'checkx':
+                  iconClass = 'fa-close'
+                  break
+                case 'checksq':
+                  iconClass = 'fa-square'
+                  break
+              }
+              icon.classList.add('fa', iconClass)
+              draggingTool.innerHTML = ''
+              draggingTool.appendChild(icon)
+            }
+
             this.$refs.docBuilder.appendChild(draggingTool)
             draggingTool.setAttribute('data-x', targetOffset.left)
             draggingTool.setAttribute('data-y', targetOffset.top)
@@ -395,14 +431,6 @@
           } else {
             draggingTool = target
           }
-        })
-        .resizable({
-          edges: { right: true },
-        })
-        .on('resizemove', (event) => {
-          let target = event.target
-          target.style.height = '' + parseInt(event.rect.height) + 'px'
-          target.style.width = '' + parseInt(event.rect.width) + 'px'
         })
 
       // make the doc builder surface a dropzone
@@ -471,10 +499,21 @@
   /**
    *
    */
-  const getDefaultSharedProps = () => {
+  const getDefaultSharedProps = (type) => {
+    let width
+    switch (type) {
+      case 'check':
+      case 'checkx':
+      case 'checksq':
+        width = 44
+        break
+      default:
+        width = 188
+        break
+    }
     return {
       count: 0,
-      width: 188,
+      width: width,
       height: 0,
       font: 'Helvetica',
       fontSize: 12,
@@ -502,6 +541,10 @@
         return '555-555-1234'
       case 'drawing':
         return 'Signature/Drawing'
+      case 'check':
+      case 'checkx':
+      case 'checksq':
+        return ' '
     }
     return ''
   }
@@ -640,7 +683,7 @@
     }
 
     .field-editor-wrap {
-      top: 285px;
+      top: 310px;
     }
 
     .toolbox-tool-wrap {
@@ -658,6 +701,23 @@
       margin-bottom: 4px;
       overflow: hidden;
       padding: 3px;
+
+      &[data-field-type=check],
+      &[data-field-type=checkx],
+      &[data-field-type=checksq] {
+        width: auto;
+        display: inline-block;
+        margin-right: 4px;
+      }
+
+      &[data-field-type=checkx],
+      &[data-field-type=checksq] {
+        padding: 3px 5px;
+      }
+      &[data-field-type=checksq] {
+        padding: 5px 7px;
+        font-size: 12px;
+      }
 
       &:last-child {
         margin-bottom: 0;
