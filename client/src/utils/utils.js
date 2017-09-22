@@ -3,7 +3,7 @@ export default class {
   /**
    * Gets the left and top offsets of an element, optionally subtracting a second element's offsets
    */
-  static getPositioning (el, subtractEl) {
+  static getPositioning (el, scrollEl, subtractEl) {
     el = el.getBoundingClientRect()
     let result = {
       left: el.left + window.scrollX,
@@ -12,8 +12,13 @@ export default class {
       height: el.height,
     }
 
+    if (scrollEl) {
+      result.left += scrollEl.scrollLeft
+      result.top += scrollEl.scrollTop
+    }
+
     if (subtractEl) {
-      subtractEl = this.getPositioning(subtractEl)
+      subtractEl = subtractEl.getBoundingClientRect()
       result.left -= subtractEl.left
       result.top -= subtractEl.top
     }

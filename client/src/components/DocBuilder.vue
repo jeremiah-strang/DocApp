@@ -216,7 +216,7 @@
        * Converts a toolbox tool element to a doc field component and adds it to the document
        */
       addDocField: function (toolboxTool) {
-        let toolPos = utils.getPositioning(toolboxTool, this.$refs.docBuilderSurface)
+        let toolPos = utils.getPositioning(toolboxTool, this.$refs.docBuilderSurface, this.$refs.docBuilderSurface)
         let type = toolboxTool.getAttribute('data-field-type')
         this.sharedDocFieldProps[type].count
         let name = type.substring(0, 1).toUpperCase() + type.substring(1, type.length) + ' Field ' +
@@ -358,8 +358,6 @@
             if (draggingTool) {
               let x = (parseFloat(draggingTool.getAttribute('data-x')) || 0) + event.dx
               let y = (parseFloat(draggingTool.getAttribute('data-y')) || 0) + event.dy
-              // x += window.scrollX
-              // y += window.scrollY
               draggingTool.style.top = y + 'px'
               draggingTool.style.left = x + 'px'
               draggingTool.setAttribute('data-x', x)
@@ -374,9 +372,8 @@
         .on('dragstart', (event) => {
           let target = event.target
           if (!target.dragOrigin) {
-            let targetOffset = utils.getPositioning(target, this.$refs.docBuilder)
-            targetOffset.top
             draggingTool = target.cloneNode(true)
+            let targetOffset = utils.getPositioning(target, this.$refs.docBuilder, this.$refs.docBuilder)
             draggingTool.classList.add('dragging')
             draggingTool.style.position = 'absolute'
             draggingTool.style.top = targetOffset.top + 'px'
