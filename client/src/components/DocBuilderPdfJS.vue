@@ -51,7 +51,7 @@
           <div class="toolbox-tool" data-field-type="text">Text</div>
           <div class="toolbox-tool" data-field-type="number">Number</div>
           <div class="toolbox-tool" data-field-type="date">Date</div>
-          <div class="toolbox-tool" data-field-type="phone">Phone</div>
+          <div class="toolbox-tool" data-field-type="phone">Phone Number</div>
           <div class="toolbox-tool" data-field-type="drawing">Signature/Drawing</div>
         </div>
       </div>
@@ -125,8 +125,8 @@
         previewImageSrc: '',
         name: '',
         docFields: [],
-        snapLinesX: [],
-        snapLinesY: [],
+        snapLinesX: [50, 800],
+        snapLinesY: [50, 1050],
         selectedDocField: {
           name: '',
           selected: false,
