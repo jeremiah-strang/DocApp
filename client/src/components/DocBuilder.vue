@@ -143,8 +143,8 @@
         previewImageSrc: '',
         name: '',
         docFields: [],
-        snapLinesX: [50, 800],
-        snapLinesY: [50, 1050],
+        snapLinesX: [], // [50, 800],
+        snapLinesY: [], // [50, 1050],
         selectedDocField: {
           name: '',
           selected: false,
@@ -651,6 +651,7 @@
       left: 914px;
       position: fixed;
       width: 200px;
+      z-index: 3;
 
       .toolbox-hdr {
         @extend .pnl;
