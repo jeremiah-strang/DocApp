@@ -229,7 +229,7 @@ button, .btn, input[type=submit] {
 
     &.btn-primary {
       background-color: $theme-blue;
-      border-color: darken($theme-blue, 20%);
+      border-color: lighten($theme-blue, 20%);
     }
   }
   

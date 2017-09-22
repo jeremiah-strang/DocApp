@@ -16,12 +16,14 @@
   "dependencies": {
     "interact.js": "^1.2.8",
     "jquery": "^3.2.1",
+    "numeral": "^2.0.6",
     "pdfjs-dist": "^1.9.583",
     "uuid": "^3.1.0",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
     "vuex": "^2.4.0",
-    "vuex-router-sync": "^4.3.2"
+    "vuex-router-sync": "^4.3.2",
+    "xdate": "^0.8.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

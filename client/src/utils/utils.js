@@ -23,13 +23,13 @@ export default class {
   /**
    *
    */
-  static getSnapLine (pos, snapLines, snapRange) {
+  static getSnapLine (pos, snapLines, snapRange, enableSnap) {
     let snap = snapLines.find(line => { return Math.abs(line - pos) <= snapRange })
     if (!snap) {
       snapLines.push(pos)
-      return pos
+      snap = pos
     }
-    return snap
+    return enableSnap ? snap : pos
   }
 
   /**

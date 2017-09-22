@@ -23,7 +23,7 @@
     <div class="surface-toolbar">
       <div class="checkbox-wrap">
         <input v-model="enableSnap" id="show-snap-lines-chk" type="checkbox">
-        <label for="show-snap-lines-chk">Show Snap Lines</label>
+        <label for="show-snap-lines-chk">Use Snap Lines</label>
       </div>
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
@@ -59,24 +59,39 @@
       <div v-show="selectedDocField.selected" class="field-editor-wrap toolbox-wrap">
         <div class="toolbox-hdr">Field Properties</div>
         <div class="toolbox">
+
           <div class="input-wrap">
             <h4>Field Name</h4>
-            <input v-model="selectedDocField.name" v-on:focus="$event.target.select()" type="text">
+            <input v-model="selectedDocField.name" v-on:focus="$event.target.select()" type="text"
+                   ref="selectedDocFieldName">
           </div>
-          <div v-show="selectedDocField.type === 'number'" class="input-wrap">
+
+          <div v-if="['text', 'number', 'date'].indexOf(selectedDocField.type) > -1" class="input-wrap">
+            <h4>Default Value</h4>
+            <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
+                   v-if="selectedDocField.type === 'number'" type="number">
+            <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
+                   v-else type="text">
+          </div>
+
+          <div v-if="selectedDocField.type === 'number'" class="input-wrap">
             <h4>Number Format</h4>
-            <!-- <input v-model="selectedDocField.numberFormat" v-on:focus="$event.target.select()"
-                   type="text"> -->
-            <select v-model="selectedDocField.numberFormat">
+            <select v-model="selectedDocField.numberFormat" v-on:change="onFormatChanged">
               <option :value="NumberFormat.none">None</option>
               <option :value="NumberFormat.comma">Comma</option>
               <option :value="NumberFormat.currency">Currency</option>
             </select>
           </div>
-          <div class="input-wrap">
-            <h4>Default Value</h4>
-            <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
-                   type="text">
+
+          <div v-if="selectedDocField.type === 'date'" class="input-wrap">
+            <h4>Date Format</h4>
+            <select v-model="selectedDocField.dateFormat" v-on:change="onFormatChanged">
+              <option :value="DateFormat.MMddyyyySlash">MM/dd/yyyy</option>
+              <option :value="DateFormat.MMddyyyyDash">MM-dd-yyyy</option>
+              <option :value="DateFormat.yyyyMMddSlash">yyyy/MM/dd</option>
+              <option :value="DateFormat.yyyyMMddDash">yyyy-MM-dd</option>
+              <option :value="DateFormat.yyyyMMdd">yyyyMMdd</option>
+            </select>
           </div>
         </div>
       </div>
@@ -88,14 +103,17 @@
   const $ = require('jquery')
   import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
+  import numeral from 'numeral'
+  import XDate from 'xdate'
   import utils from '../utils/utils'
   import NumberFormat from '../utils/NumberFormat'
+  import DateFormat from '../utils/DateFormat'
   import pdfjs from 'pdfjs-dist'
   import DocField from '@/components/DocField'
 
   pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
 
-  const snapRangeX = 10
+  const snapRangeX = 12
   const snapRangeY = 10
   
   export default {
@@ -103,7 +121,7 @@
     data () {
       return {
         showEditor: false,
-        enableSnap: false,
+        enableSnap: true,
         previewImageSrc: '',
         name: '',
         docFields: [],
@@ -123,6 +141,7 @@
         toolInteractable: null,
         dropzoneInteractable: null,
         toolboxInteractable: null,
+        DateFormat,
         NumberFormat,
       }
     },
@@ -200,70 +219,79 @@
           name: name,
           uuid: uuidv4(),
           type: type,
-          x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX),
-          y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY),
+          x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX, this.enableSnap),
+          y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY, this.enableSnap),
           height: toolboxTool.style.height,
           width: this.sharedDocFieldProps[type].width,
-          text: getDefaultFieldText(type),
           selected: true,
         }
+
+        docField.numberFormat = this.sharedDocFieldProps[type].numberFormat
+        docField.dateFormat = this.sharedDocFieldProps[type].dateFormat
+        docField.text = getDefaultFieldText(docField)
+
         this.onSelectDocField(docField)
         this.docFields.push(docField)
 
-        this.$nextTick(() => {
-          docField.interactable = interact('#_' + docField.uuid)
-            .draggable({
-              inertia: false,
-              restrict: {
-                restriction: 'parent',
-                endOnly: true,
-                elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-              },
-              autoScroll: true,
-              onmove: (event) => {
-                let target = event.target
-                let x = this.selectedDocField.x + event.dx
-                let y = this.selectedDocField.y + event.dy
-                target.style.left = x + 'px'
-                target.style.top = y + 'px'
-                this.selectedDocField.x = x
-                this.selectedDocField.y = y
-              },
-              onend: (event) => {
-                let target = event.target
-                let x = this.selectedDocField.x
-                let y = this.selectedDocField.y
-                x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
-                y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
-                target.style.left = x + 'px'
-                target.style.top = y + 'px'
-                this.selectedDocField.x = x
-                this.selectedDocField.y = y
-              }
-            })
-            .on('dragstart', (event) => {
-              if (typeof this.onSelect === 'function') {
-                this.onSelect(this.selectedDocField)
-              }
-            })
-            .resizable({
-              edges: { right: true },
-            })
-            .on('resizemove', (event) => {
+        docField.interactable = interact('#_' + docField.uuid)
+          .draggable({
+            inertia: false,
+            restrict: {
+              restriction: 'parent',
+              endOnly: true,
+              elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+            },
+            autoScroll: true,
+            onmove: (event) => {
               let target = event.target
-              if (typeof this.onSelect === 'function') {
-                this.onSelect(this.selectedDocField)
-              }
-              target.style.height = event.rect.height + 'px'
-              target.style.width = event.rect.width + 'px'
-              this.selectedDocField.height = event.rect.height
-              this.selectedDocField.width = event.rect.width
+              let x = this.selectedDocField.x + event.dx
+              let y = this.selectedDocField.y + event.dy
+              target.style.left = x + 'px'
+              target.style.top = y + 'px'
+              this.selectedDocField.x = x
+              this.selectedDocField.y = y
+            },
+            onend: (event) => {
+              let target = event.target
+              let x = this.selectedDocField.x
+              let y = this.selectedDocField.y
+              x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
+              y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
+              target.style.left = x + 'px'
+              target.style.top = y + 'px'
+              this.selectedDocField.x = x
+              this.selectedDocField.y = y
+            }
+          })
+          .on('dragstart', (event) => {
+            if (typeof this.onSelect === 'function') {
+              this.onSelect(this.selectedDocField)
+            }
+          })
+          .resizable({
+            edges: { right: true },
+          })
+          .on('resizemove', (event) => {
+            let target = event.target
+            if (typeof this.onSelect === 'function') {
+              this.onSelect(this.selectedDocField)
+            }
+            target.style.height = event.rect.height + 'px'
+            target.style.width = event.rect.width + 'px'
+            this.selectedDocField.height = event.rect.height
+            this.selectedDocField.width = event.rect.width
 
-              let type = this.selectedDocField.type
-              this.sharedDocFieldProps[type].height = this.selectedDocField.height
-              this.sharedDocFieldProps[type].width = this.selectedDocField.width
-            })
-        })
+            let type = this.selectedDocField.type
+            this.sharedDocFieldProps[type].height = this.selectedDocField.height
+            this.sharedDocFieldProps[type].width = this.selectedDocField.width
+          })
+      },
+
+      /*
+       * Selected number or date format changed
+       */
+      onFormatChanged: function () {
+        this.selectedDocField.text = getDefaultFieldText(this.selectedDocField)
       },
 
       /*
@@ -277,6 +305,8 @@
           name: '',
           selected: false,
         }
+
+        this.$nextTick(() => this.$refs.selectedDocFieldName.select())
       },
 
       /*
@@ -335,7 +365,10 @@
             draggingTool.style.left = targetOffset.left + 'px'
             draggingTool.style.width = target.getBoundingClientRect().width + 'px'
             draggingTool.dragOrigin = target
-            draggingTool.innerHTML = getDefaultFieldText(draggingTool.getAttribute('data-field-type'))
+            draggingTool.innerHTML = getDefaultFieldText({
+              type: draggingTool.getAttribute('data-field-type'),
+              ...getDefaultSharedProps()
+            })
             this.$refs.docBuilder.appendChild(draggingTool)
             draggingTool.setAttribute('data-x', targetOffset.left)
             draggingTool.setAttribute('data-y', targetOffset.top)
@@ -431,20 +464,24 @@
       font: 'Helvetica',
       fontSize: 12,
       numberFormat: NumberFormat.none,
+      dateFormat: DateFormat.MMddyyyySlash,
     }
   }
 
   /**
    *
    */
-  const getDefaultFieldText = (docFieldType) => {
-    switch (docFieldType) {
+  const getDefaultFieldText = (docField) => {
+    switch (docField.type) {
       case 'text':
         return 'Example text'
       case 'number':
-        return '12345.67'
+        let num = 12345.67
+        return docField.numberFormat ? numeral(num).format(docField.numberFormat) : num
       case 'date':
-        return '1/1/2017'
+        // let exampleDate = new XDate(2017, 0, 1)
+        let dateStr = (new XDate(2017, 0, 1)).toString(docField.dateFormat)
+        return dateStr
       case 'phone':
         return '555-555-1234'
       case 'drawing':
@@ -572,9 +609,16 @@
         padding: 6px;
         width: 100%;
 
-        input {
+        input, select, option {
           @extend .box;
+        }
+
+        input[type=text] {
           width: 100%;
+        }
+
+        input[type=number], select, option {
+          width: 120px;
         }
       }
     }
