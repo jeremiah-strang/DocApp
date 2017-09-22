@@ -466,6 +466,7 @@ ul, ol, li {
 .input-wrap {
   @extend .pnl;
   @extend .w100;
+  padding: 4px 0;
   display: block;
 
   input {

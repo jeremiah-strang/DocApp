@@ -66,6 +66,13 @@
                    ref="selectedDocFieldName">
           </div>
 
+          <div class="input-wrap">
+            <div class="checkbox-wrap">
+              <input v-model="selectedDocField.isRequired" id="is-required-chk" type="checkbox">
+              <label for="is-required-chk">Required?</label>
+            </div>
+          </div>
+
           <div v-if="['text', 'number', 'date'].indexOf(selectedDocField.type) > -1" class="input-wrap">
             <h4>Default Value</h4>
             <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
@@ -215,6 +222,7 @@
         let name = type.substring(0, 1).toUpperCase() + type.substring(1, type.length) + ' Field ' +
           (++this.sharedDocFieldProps[type].count)
 
+        let sharedProps = this.sharedDocFieldProps[type]
         let docField = {
           name: name,
           uuid: uuidv4(),
@@ -222,12 +230,13 @@
           x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX, this.enableSnap),
           y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY, this.enableSnap),
           height: toolboxTool.style.height,
-          width: this.sharedDocFieldProps[type].width,
+          width: sharedProps.width,
           selected: true,
+          isRequired: true,
         }
 
-        docField.numberFormat = this.sharedDocFieldProps[type].numberFormat
-        docField.dateFormat = this.sharedDocFieldProps[type].dateFormat
+        docField.numberFormat = sharedProps.numberFormat
+        docField.dateFormat = sharedProps.dateFormat
         docField.text = getDefaultFieldText(docField)
 
         this.onSelectDocField(docField)
@@ -469,6 +478,7 @@
       height: 0,
       font: 'Helvetica',
       fontSize: 12,
+      isRequired: true,
       numberFormat: NumberFormat.none,
       dateFormat: DateFormat.MMddyyyySlash,
     }
