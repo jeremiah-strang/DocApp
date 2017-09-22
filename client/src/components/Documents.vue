@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import DocBuilder from '@/components/DocBuilderPdfJS'
+  import DocBuilder from '@/components/DocBuilder'
 
   export default {
     name: 'documents',

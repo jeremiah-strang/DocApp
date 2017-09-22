@@ -53,7 +53,7 @@
     @extend .pnl;
     background-color: rgba($dark1, 0.15);
     border-radius: 4px;
-    border: 2px solid rgba($dark1, 0.5);
+    border: 2px solid rgba($dark1, 0.10);
     color: $font-dark;
     font-family: Helvetica;
     font-size: 12pt;
@@ -66,7 +66,7 @@
     &.selected {
       @extend .shadowed;
       background-color: rgba($theme-color, 0.15);
-      border-color: rgba($theme-color, 0.5);
+      border-color: rgba($theme-color, 0.15);
 
       .fa.fa-trash {
         color: rgba($theme-color, 0.5);
