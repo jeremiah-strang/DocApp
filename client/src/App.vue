@@ -4,7 +4,7 @@
 
       <div class="app-nav-toggle" v-on:click="toggleNav"><i class="fa fa-thumb-tack"></i></div>
 
-      <router-link to="/Dashboard" title="Go to your dashboard">
+      <router-link to="/" title="Go to your dashboard">
         <i class="fa fa-home"></i>
         <span v-show="isNavMaximized">Dashboard</span>
       </router-link>
@@ -87,7 +87,7 @@
       }
 
       &:hover,
-      &.router-link-exact-active {
+      &.router-link-active {
         background-color: $dark2;
       }
     }

@@ -5,6 +5,7 @@
         <label class="settings-label float-left">Document Name</label>
         <input v-model="name" type="text">
       </div>
+
       <div class="panel-wrapper">
         <label class="settings-label float-left">Template File</label>
         <form ref="uploadForm" v-on:submit="uploadFormSubmit" class="float-left"
@@ -12,21 +13,26 @@
           <input ref="fileUploadInput" name="file" v-on:change="uploadFormSubmit" type="file"><br>
         </form>
       </div>
+
+      <div class="settings-btn-wrap">
+        <button v-on:click="saveDocument" :disabled="!canSave"
+                class="btn btn-primary float-right">Save <i class="fa fa-save"></i></button>
+      </div>
     </div>
 
     <div class="surface-toolbar">
       <div class="checkbox-wrap">
-        <input v-model="showSnapLines" id="show-snap-lines-chk" type="checkbox">
+        <input v-model="enableSnap" id="show-snap-lines-chk" type="checkbox">
         <label for="show-snap-lines-chk">Show Snap Lines</label>
       </div>
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <div v-show="showSnapLines" v-for="line in snapLinesY" :style="'top:' + line + 'px'" 
+      <div v-show="enableSnap" v-for="item in snapLinesY" :style="'top:' + item + 'px'" 
            class="snap-line-y">
         <i class="fa fa-caret-right"></i>       
       </div>
-      <div v-show="showSnapLines" v-for="line in snapLinesX" :style="'left:' + line + 'px'"
+      <div v-show="enableSnap" v-for="item in snapLinesX" :style="'left:' + item + 'px'"
            class="snap-line-x">
         <i class="fa fa-caret-down"></i>    
       </div>
@@ -59,8 +65,13 @@
           </div>
           <div v-show="selectedDocField.type === 'number'" class="input-wrap">
             <h4>Number Format</h4>
-            <input v-model="selectedDocField.numberFormat" v-on:focus="$event.target.select()"
-                   type="text">
+            <!-- <input v-model="selectedDocField.numberFormat" v-on:focus="$event.target.select()"
+                   type="text"> -->
+            <select v-model="selectedDocField.numberFormat">
+              <option :value="NumberFormat.none">None</option>
+              <option :value="NumberFormat.comma">Comma</option>
+              <option :value="NumberFormat.currency">Currency</option>
+            </select>
           </div>
           <div class="input-wrap">
             <h4>Default Value</h4>
@@ -78,9 +89,11 @@
   import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
   import utils from '../utils/utils'
+  import NumberFormat from '../utils/NumberFormat'
   import pdfjs from 'pdfjs-dist'
-  pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
   import DocField from '@/components/DocField'
+
+  pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
 
   const snapRangeX = 10
   const snapRangeY = 10
@@ -90,7 +103,7 @@
     data () {
       return {
         showEditor: false,
-        showSnapLines: false,
+        enableSnap: false,
         previewImageSrc: '',
         name: '',
         docFields: [],
@@ -110,11 +123,23 @@
         toolInteractable: null,
         dropzoneInteractable: null,
         toolboxInteractable: null,
+        NumberFormat,
       }
+    },
+    computed: {
+      canSave: function () {
+        return false
+      },
     },
     watch: {
     },
     methods: {
+
+      /*
+       * Saves the document
+       */
+      saveDocument: function () {
+      },
 
       /*
        * Converts the selected PDF template file to .png and renders it on the design surface
@@ -268,6 +293,10 @@
         }
       },
     },
+
+    /**
+     * Set up draggable elements when the component is mounted
+     */
     mounted: function () {
       // set up ability to drag toolbox tools onto the doc builder surface
       let draggingTool
@@ -373,26 +402,21 @@
           },
         })
     },
+
+    /**
+     * Unset draggable elements before the component is destroyed
+     */
     beforeDestroy: function () {
       this.docFields.map(docField => { return docField.interactable }).forEach(interactable => {
-        unset(interactable)
+        utils.unsetInteractable(interactable)
       })
 
-      unset(this.toolInteractable)
-      unset(this.dropzoneInteractable)
-      unset(this.toolboxInteractable)
+      utils.unsetInteractable(this.toolInteractable)
+      utils.unsetInteractable(this.dropzoneInteractable)
+      utils.unsetInteractable(this.toolboxInteractable)
     },
     components: {
       DocField
-    }
-  }
-
-  /**
-   *
-   */
-  const unset = (interactable) => {
-    if (typeof interactable === 'object' && typeof interactable.unset === 'function') {
-      interactable.unset()
     }
   }
 
@@ -406,6 +430,7 @@
       height: 0,
       font: 'Helvetica',
       fontSize: 12,
+      numberFormat: NumberFormat.none,
     }
   }
 
@@ -465,6 +490,13 @@
 
       .settings-label {
         width: 124px;
+      }
+
+      .settings-btn-wrap {
+        @extend .pad1;
+        position: absolute;
+        right: 0;
+        bottom: 0;
       }
     }
 

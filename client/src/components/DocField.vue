@@ -1,6 +1,6 @@
 <template>
   <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
-    v-on:click="onClick" class="doc-field">
+       v-on:click="onClick" class="doc-field">
     <span class="doc-field-text">{{ docField.text }}</span>&nbsp;
     <i v-on:click="$emit('delete-doc-field')" class="fa fa-trash"></i>
   </div>
@@ -40,50 +40,6 @@
     created: function () {
     },
     mounted: function () {
-      // make the field draggable and resizable
-      // interact(this.$refs.docFieldEl)
-      //   .draggable({
-      //     inertia: false,
-      //     restrict: {
-      //       restriction: 'parent',
-      //       endOnly: true,
-      //       elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-      //     },
-      //     autoScroll: true,
-      //     onmove: (event) => {
-      //       let x = (parseFloat(this.$refs.docFieldEl.getAttribute('data-x')) || 0) + event.dx
-      //       let y = (parseFloat(this.$refs.docFieldEl.getAttribute('data-y')) || 0) + event.dy
-      //       this.$refs.docFieldEl.style.left = x + 'px'
-      //       this.$refs.docFieldEl.style.top = y + 'px'
-      //       this.$refs.docFieldEl.setAttribute('data-x', x)
-      //       this.$refs.docFieldEl.setAttribute('data-y', y)
-      //       this.docField.x = x
-      //       this.docField.y = y
-      //     },
-      //     onend: (event) => {
-
-      //     }
-      //   })
-      //   .on('dragstart', (event) => {
-      //     this.$refs.docFieldEl.setAttribute('data-x', this.docField.x)
-      //     this.$refs.docFieldEl.setAttribute('data-y', this.docField.y)
-      //     if (typeof this.onSelect === 'function') {
-      //       this.onSelect(this.docField)
-      //     }
-      //   })
-      //   .resizable({
-      //     edges: { right: true },
-      //   })
-      //   .on('resizemove', (event) => {
-      //     let target = event.target
-      //     if (typeof this.onSelect === 'function') {
-      //       this.onSelect(this.docField)
-      //     }
-      //     target.style.height = event.rect.height + 'px'
-      //     target.style.width = event.rect.width + 'px'
-      //     this.docField.height = event.rect.height
-      //     this.docField.width = event.rect.width
-      //   })
     },
     components: {
     }

@@ -179,7 +179,9 @@ textarea {
 select,
 option {
   @extend .box;
+  border-radius: 4px;
   color: $dark1;
+  cursor: pointer;
   font-size: $font-size;
   padding: 3px;
   background-color: $gray1;
@@ -248,6 +250,11 @@ button, .btn, input[type=submit] {
     background-color: darken($theme-blue, 5%);
     border-color: darken($theme-blue, 15%);
     color: $font-light;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
   }
 }
 
