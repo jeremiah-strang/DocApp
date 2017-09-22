@@ -1,7 +1,7 @@
 <template>
   <div ref="docBuilder" class="doc-builder">
     <div class="settings-wrap">
-      <div class="panel-wrapper">
+      <div class="panel-wrapper" style="margin-bottom: 4px;">
         <label class="settings-label float-left">Document Name</label>
         <input v-model="name" type="text">
       </div>
