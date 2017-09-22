@@ -292,6 +292,12 @@
        */
       onFormatChanged: function () {
         this.selectedDocField.text = getDefaultFieldText(this.selectedDocField)
+        let sharedProps = this.sharedDocFieldProps[this.selectedDocField.type]
+        if (this.selectedDocField.type === 'number') {
+          sharedProps.numberFormat = this.selectedDocField.numberFormat
+        } else if (this.selectedDocField.type === 'date') {
+          sharedProps.dateFormat = this.selectedDocField.dateFormat
+        }
       },
 
       /*
