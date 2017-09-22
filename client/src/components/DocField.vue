@@ -58,7 +58,7 @@
     font-family: Helvetica;
     font-size: 12pt;
     overflow: hidden;
-    padding: 3px 6px 3px 3px;
+    padding: 3px 3px 3px 3px;
     padding-right: 6px;
     position: absolute;
     z-index: 1;
@@ -79,7 +79,8 @@
     }
 
     .fa.fa-trash {
-      @extend.float-right;
+      position: absolute;
+      right: 3px;
       color: rgba($dark1, 0.5);
       cursor: pointer;
     }
