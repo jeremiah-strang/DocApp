@@ -30,8 +30,9 @@
     },
     computed: {
       style: function () {
-        return `width:${parseInt(this.docField.width)}px;height:${parseInt(this.docField.height)}px;` +
-               `top:${this.docField.y}px;left:${this.docField.x}px;`
+        return `width:${parseInt(this.docField.width)}px;height:${parseInt(this.docField.height)}` +
+          `px;top:${this.docField.y}px;left:${this.docField.x}px;font-family:` +
+          `${this.docField.fontFamily};font-size:${this.docField.fontSize}pt;`
       },
       title: function () {
         return `${this.docField.name} (${this.docField.x}, ${this.docField.y})`

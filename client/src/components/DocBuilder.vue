@@ -114,6 +114,31 @@
               <option :value="DateFormat.yyyyMMdd">yyyyMMdd</option>
             </select>
           </div>
+
+          <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
+            class="input-wrap">
+            <h4>Font</h4>
+            <select v-model="selectedDocField.fontFamily" v-on:change="onFontChanged">
+              <option :value="FontOption.helvetica">Helvetica</option>
+              <option :value="FontOption.courier">Courier</option>
+              <option :value="FontOption.times">Times</option>
+            </select>
+          </div>
+
+          <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
+            class="input-wrap">
+            <h4>Font Size</h4>
+            <select v-model="selectedDocField.fontSize" v-on:change="onFontChanged">
+              <option :value="8">8pt</option>
+              <option :value="9">9pt</option>
+              <option :value="10">10pt</option>
+              <option :value="11">11pt</option>
+              <option :value="12">12pt</option>
+              <option :value="13">13pt</option>
+              <option :value="14">14pt</option>
+              <option :value="15">15pt</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -129,6 +154,7 @@
   import utils from '../utils/utils'
   import NumberFormat from '../utils/NumberFormat'
   import DateFormat from '../utils/DateFormat'
+  import FontOption from '../utils/FontOption'
   import pdfjs from 'pdfjs-dist'
   import DocField from '@/components/DocField'
   import SnapLine from '@/components/SnapLine'
@@ -168,6 +194,7 @@
         toolboxInteractable: null,
         DateFormat,
         NumberFormat,
+        FontOption,
       }
     },
     computed: {
@@ -251,6 +278,8 @@
           width: sharedProps.width,
           selected: true,
           isRequired: true,
+          fontFamily: sharedProps.fontFamily,
+          fontSize: sharedProps.fontSize,
           ...this.getSnapLines(toolPos.left, toolPos.top),
         }
 
@@ -420,6 +449,17 @@
           sharedProps.numberFormat = this.selectedDocField.numberFormat
         } else if (this.selectedDocField.type === 'date') {
           sharedProps.dateFormat = this.selectedDocField.dateFormat
+        }
+      },
+
+      /*
+       * Selected doc field font changed
+       */
+      onFontChanged: function () {
+        for (let type of ['text', 'number', 'phone', 'date']) {
+          let sharedProps = this.sharedDocFieldProps[type]
+          sharedProps.fontFamily = this.selectedDocField.fontFamily
+          sharedProps.fontSize = this.selectedDocField.fontSize
         }
       },
 
@@ -768,7 +808,7 @@
       count: 0,
       width: width,
       height: 0,
-      font: 'Helvetica',
+      fontFamily: FontOption.helvetica,
       fontSize: 12,
       isRequired: true,
       numberFormat: NumberFormat.none,
@@ -787,7 +827,6 @@
         let num = 12345.67
         return docField.numberFormat ? numeral(num).format(docField.numberFormat) : num
       case 'date':
-        // let exampleDate = new XDate(2017, 0, 1)
         let dateStr = (new XDate(2017, 0, 1)).toString(docField.dateFormat)
         return dateStr
       case 'phone':
