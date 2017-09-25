@@ -33,9 +33,9 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="'y' + item.position"
+      <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="item.uuid"
                  :snap-line="item"></snap-line>
-      <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="'x' + item.position"
+      <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="item.uuid"
                  :snap-line="item"></snap-line>
       <!-- <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="'x' + item.position"
                  :isVertical="true" :position="item.position"></snap-line> -->
@@ -251,7 +251,7 @@
           width: sharedProps.width,
           selected: true,
           isRequired: true,
-          ...getSnapLines(toolPos.left, toolPos.top, this.snapLinesX, this.snapLinesY, this.enableSnap),
+          ...this.getSnapLines(toolPos.left, toolPos.top),
         }
 
         docField.numberFormat = sharedProps.numberFormat
@@ -278,6 +278,7 @@
               target.style.top = y + 'px'
               docField.x = x
               docField.y = y
+              this.checkSnapLines(x, y)
             },
             onend: (event) => {
               let target = event.target
@@ -285,15 +286,23 @@
               // let y = docField.y
               // x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
               // y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
-              let snap = getSnapLines(docField.x, docField.y, this.snapLinesX, this.snapLinesY, this.enableSnap)
-              console.log(snap)
+              let snap = this.getSnapLines(docField.x, docField.y)
               target.style.left = snap.x + 'px'
               target.style.top = snap.y + 'px'
               docField.x = snap.x
               docField.y = snap.y
+              docField.snapLineX = snap.snapLineX
+              docField.snapLineY = snap.snapLineY
             }
           })
           .on('dragstart', (event) => {
+            this.snapLinesX.forEach(sn => {
+              sn.selected = false
+            })
+
+            this.snapLinesY.forEach(sn => {
+              sn.selected = false
+            })
             if (typeof this.onSelect === 'function') {
               this.onSelect(docField)
             }
@@ -318,6 +327,75 @@
       },
 
       /*
+       * Checks snap lines
+       */
+      getSnapLines: function (left, top) {
+        let xy
+        let snapX = this.snapLinesX.find(line => { return Math.abs(line.position - left) <= snapRangeX })
+        let snapY = this.snapLinesY.find(line => { return Math.abs(line.position - top) <= snapRangeY })
+
+        if (!snapX) {
+          snapX = {
+            selected: true,
+            uuid: uuidv4(),
+            isVertical: true,
+            position: left,
+          }
+          this.snapLinesX.push(snapX)
+        }
+
+        if (!snapY) {
+          snapY = {
+            uuid: uuidv4(),
+            selected: true,
+            isVertical: false,
+            position: top,
+          }
+          this.snapLinesY.push(snapY)
+        }
+
+        if (this.enableSnap) {
+          xy = {
+            snapLineX: snapX,
+            snapLineY: snapY,
+            x: snapX ? snapX.position : left,
+            y: snapY ? snapY.position : top,
+          }
+        } else {
+          xy = {
+            snapLineX: this.snapLinesX.find(sn => { return sn.position === left }), // snapX,
+            snapLineY: this.snapLinesY.find(sn => { return sn.position === top }), // snapY,
+            x: left,
+            y: top,
+          }
+        }
+
+        return xy
+      },
+
+      /*
+       *
+       */
+      checkSnapLines: function (x, y) {
+        this.snapLinesX.forEach(sn => {
+          sn.selected = false
+        })
+
+        this.snapLinesY.forEach(sn => {
+          sn.selected = false
+        })
+
+        let snapX = this.snapLinesX.find(sn => { return Math.abs(sn.position - x) <= snapRangeX })
+        let snapY = this.snapLinesY.find(sn => { return Math.abs(sn.position - y) <= snapRangeY })
+        if (snapX) {
+          snapX.selected = true
+        }
+        if (snapY) {
+          snapY.selected = true
+        }
+      },
+
+      /*
        * Selected number or date format changed
        */
       onFormatChanged: function () {
@@ -334,12 +412,28 @@
        * Updates the current doc field selection and loads its properties
        */
       onSelectDocField: function (docField) {
+        this.snapLinesX.forEach(sn => {
+          sn.selected = false
+        })
+
+        this.snapLinesY.forEach(sn => {
+          sn.selected = false
+        })
+
         this.docFields.forEach(df => {
           df.selected = df.uuid === docField.uuid
         })
         this.selectedDocField = docField || {
           name: '',
           selected: false,
+        }
+
+        if (this.selectedDocField.snapLineX) {
+          this.selectedDocField.snapLineX.selected = true
+        }
+
+        if (this.selectedDocField.snapLineY) {
+          this.selectedDocField.snapLineY.selected = true
         }
 
         this.$nextTick(() => this.$refs.selectedDocFieldName.select())
@@ -365,6 +459,20 @@
       moveDocFieldUp: function () {
         if (this.selectedDocField.y > 0) {
           this.selectedDocField.y--
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = false
+          }
+
+          let snapLineY = this.snapLinesY.find(sn => {
+            return sn.position === this.selectedDocField.y
+          })
+
+          this.selectedDocField.snapLineY = snapLineY
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = true
+          }
         }
       },
 
@@ -374,6 +482,20 @@
       moveDocFieldDown: function () {
         if (this.selectedDocField.y < 1100) {
           this.selectedDocField.y++
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = false
+          }
+
+          let snapLineY = this.snapLinesY.find(sn => {
+            return sn.position === this.selectedDocField.y
+          })
+
+          this.selectedDocField.snapLineY = snapLineY
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = true
+          }
         }
       },
 
@@ -383,6 +505,33 @@
       moveDocFieldLeft: function () {
         if (this.selectedDocField.x > 0) {
           this.selectedDocField.x--
+
+          if (this.selectedDocField.snapLineX) {
+            this.selectedDocField.snapLineX.selected = false
+          }
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = false
+          }
+
+          let snapLineX = this.snapLinesX.find(sn => {
+            return sn.position === this.selectedDocField.x
+          })
+
+          let snapLineY = this.snapLinesY.find(sn => {
+            return sn.position === this.selectedDocField.y
+          })
+
+          this.selectedDocField.snapLineX = snapLineX
+          this.selectedDocField.snapLineY = snapLineY
+
+          if (this.selectedDocField.snapLineX) {
+            this.selectedDocField.snapLineX.selected = true
+          }
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = true
+          }
         }
       },
 
@@ -392,6 +541,33 @@
       moveDocFieldRight: function () {
         if (this.selectedDocField.x < 850) {
           this.selectedDocField.x++
+
+          if (this.selectedDocField.snapLineX) {
+            this.selectedDocField.snapLineX.selected = false
+          }
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = false
+          }
+
+          let snapLineX = this.snapLinesX.find(sn => {
+            return sn.position === this.selectedDocField.x
+          })
+
+          let snapLineY = this.snapLinesY.find(sn => {
+            return sn.position === this.selectedDocField.y
+          })
+
+          this.selectedDocField.snapLineX = snapLineX
+          this.selectedDocField.snapLineY = snapLineY
+
+          if (this.selectedDocField.snapLineX) {
+            this.selectedDocField.snapLineX.selected = true
+          }
+
+          if (this.selectedDocField.snapLineY) {
+            this.selectedDocField.snapLineY.selected = true
+          }
         }
       },
     },
@@ -400,6 +576,9 @@
      * Set up draggable elements when the component is mounted
      */
     mounted: function () {
+      let surfaceOffset = utils.getPositioning(
+        this.$refs.docBuilder, this.$refs.docBuilder, this.$refs.docBuilderSurface)
+
       // set up ability to drag toolbox tools onto the doc builder surface
       let draggingTool
       this.toolInteractable = interact('.toolbox-tool')
@@ -419,6 +598,7 @@
               draggingTool.style.left = x + 'px'
               draggingTool.setAttribute('data-x', x)
               draggingTool.setAttribute('data-y', y)
+              this.checkSnapLines(x - Math.abs(surfaceOffset.left), y - Math.abs(surfaceOffset.top))
             }
           },
           onend: (event) => {
@@ -427,6 +607,14 @@
           }
         })
         .on('dragstart', (event) => {
+          this.snapLinesX.forEach(sn => {
+            sn.selected = false
+          })
+
+          this.snapLinesY.forEach(sn => {
+            sn.selected = false
+          })
+
           let target = event.target
           if (!target.dragOrigin) {
             draggingTool = target.cloneNode(true)
@@ -477,7 +665,7 @@
         })
 
       // make the doc builder surface a dropzone
-      this.dropzoneInteractable = interact('.doc-builder-surface').dropzone({
+      this.dropzoneInteractable = interact(this.$refs.docBuilderSurface).dropzone({
         accept: '.toolbox-tool',
         overlap: 0.75,
         ondropactivate: function (event) {
@@ -591,42 +779,6 @@
         return ' '
     }
     return ''
-  }
-
-  /**
-   *
-   */
-  const getSnapLines = (left, top, snapLinesX, snapLinesY, enableSnap) => {
-    let xy
-    if (enableSnap === true) {
-      let snapX = snapLinesX.find(line => { return Math.abs(line.position - left) <= snapRangeX })
-      let snapY = snapLinesY.find(line => { return Math.abs(line.position - top) <= snapRangeY })
-
-      if (!snapX) {
-        snapLinesX.push({
-          isVertical: true,
-          position: left,
-        })
-      }
-      if (!snapY) {
-        snapLinesY.push({
-          isVertical: false,
-          position: top,
-        })
-      }
-
-      xy = {
-        x: snapX ? snapX.position : left,
-        y: snapY ? snapY.position : top,
-      }
-    } else {
-      xy = {
-        x: left,
-        y: top,
-      }
-    }
-
-    return xy
   }
 </script>
 

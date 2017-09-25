@@ -1,6 +1,7 @@
 <template>
   <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
-       v-on:click="onClick" class="doc-field" :data-field-type="docField.type">
+       v-on:click="onClick" class="doc-field" :data-field-type="docField.type"
+       :title="title">
     <i v-if="docField.type === 'check'" class="fa fa-check"></i>
     <i v-if="docField.type === 'checkx'" class="fa fa-close"></i>
     <i v-if="docField.type === 'checksq'" class="fa fa-square"></i>
@@ -31,6 +32,9 @@
       style: function () {
         return `width:${parseInt(this.docField.width)}px;height:${parseInt(this.docField.height)}px;` +
                `top:${this.docField.y}px;left:${this.docField.x}px;`
+      },
+      title: function () {
+        return `${this.docField.name} (${this.docField.x}, ${this.docField.y})`
       },
     },
     methods: {
