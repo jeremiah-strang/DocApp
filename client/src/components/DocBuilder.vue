@@ -33,14 +33,12 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <div v-show="enableSnap" v-for="item in snapLinesY" :style="'top:' + item + 'px'" 
-           class="snap-line-y">
-        <i class="fa fa-caret-right"></i>       
-      </div>
-      <div v-show="enableSnap" v-for="item in snapLinesX" :style="'left:' + item + 'px'"
-           class="snap-line-x">
-        <i class="fa fa-caret-down"></i>    
-      </div>
+      <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="'y' + item.position"
+                 :snap-line="item"></snap-line>
+      <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="'x' + item.position"
+                 :snap-line="item"></snap-line>
+      <!-- <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="'x' + item.position"
+                 :isVertical="true" :position="item.position"></snap-line> -->
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
                  :on-select="onSelectDocField" :id="'_' + item.uuid" 
@@ -133,6 +131,7 @@
   import DateFormat from '../utils/DateFormat'
   import pdfjs from 'pdfjs-dist'
   import DocField from '@/components/DocField'
+  import SnapLine from '@/components/SnapLine'
 
   pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
 
@@ -246,12 +245,13 @@
           name: name,
           uuid: uuidv4(),
           type: type,
-          x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX, this.enableSnap),
-          y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY, this.enableSnap),
+          // x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX, this.enableSnap),
+          // y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY, this.enableSnap),
           height: toolboxTool.style.height,
           width: sharedProps.width,
           selected: true,
           isRequired: true,
+          ...getSnapLines(toolPos.left, toolPos.top, this.snapLinesX, this.snapLinesY, this.enableSnap),
         }
 
         docField.numberFormat = sharedProps.numberFormat
@@ -281,14 +281,16 @@
             },
             onend: (event) => {
               let target = event.target
-              let x = docField.x
-              let y = docField.y
-              x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
-              y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
-              target.style.left = x + 'px'
-              target.style.top = y + 'px'
-              docField.x = x
-              docField.y = y
+              // let x = docField.x
+              // let y = docField.y
+              // x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
+              // y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
+              let snap = getSnapLines(docField.x, docField.y, this.snapLinesX, this.snapLinesY, this.enableSnap)
+              console.log(snap)
+              target.style.left = snap.x + 'px'
+              target.style.top = snap.y + 'px'
+              docField.x = snap.x
+              docField.y = snap.y
             }
           })
           .on('dragstart', (event) => {
@@ -533,7 +535,8 @@
       utils.unsetInteractable(this.toolboxInteractable)
     },
     components: {
-      DocField
+      DocField,
+      SnapLine,
     }
   }
 
@@ -588,6 +591,42 @@
         return ' '
     }
     return ''
+  }
+
+  /**
+   *
+   */
+  const getSnapLines = (left, top, snapLinesX, snapLinesY, enableSnap) => {
+    let xy
+    if (enableSnap === true) {
+      let snapX = snapLinesX.find(line => { return Math.abs(line.position - left) <= snapRangeX })
+      let snapY = snapLinesY.find(line => { return Math.abs(line.position - top) <= snapRangeY })
+
+      if (!snapX) {
+        snapLinesX.push({
+          isVertical: true,
+          position: left,
+        })
+      }
+      if (!snapY) {
+        snapLinesY.push({
+          isVertical: false,
+          position: top,
+        })
+      }
+
+      xy = {
+        x: snapX ? snapX.position : left,
+        y: snapY ? snapY.position : top,
+      }
+    } else {
+      xy = {
+        x: left,
+        y: top,
+      }
+    }
+
+    return xy
   }
 </script>
 
@@ -651,37 +690,6 @@
         @extend .box;
         // height: 1100px;
         // width: 850px;
-      }
-
-      .snap-line-y,
-      .snap-line-x {
-        border-color: rgba($theme-color, 0.5);
-        border-style: dashed;
-        position: absolute;
-        z-index: 2;
-
-        i.fa {
-          color: $theme-color;
-        }
-      }
-      .snap-line-y {
-        border-width: 0 0 2px 0;
-        height: 0;
-        width: 100%;
-        i.fa {
-          position: absolute;
-          top: -6.5px;
-          left: -5.5px;
-        }
-      }
-      .snap-line-x {
-        border-width: 0 2px 0 0;
-        height: 100%;
-        i.fa {
-          position: absolute;
-          top: -11px;
-          left: -3.5px;
-        }
       }
     }
 
