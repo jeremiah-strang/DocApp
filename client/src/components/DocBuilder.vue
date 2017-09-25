@@ -34,9 +34,9 @@
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="item.uuid"
-                 :snap-line="item"></snap-line>
+                 :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"></snap-line>
       <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="item.uuid"
-                 :snap-line="item"></snap-line>
+                 :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"></snap-line>
       <!-- <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="'x' + item.position"
                  :isVertical="true" :position="item.position"></snap-line> -->
 
@@ -282,10 +282,6 @@
             },
             onend: (event) => {
               let target = event.target
-              // let x = docField.x
-              // let y = docField.y
-              // x = utils.getSnapLine(x, this.snapLinesX, snapRangeX)
-              // y = utils.getSnapLine(y, this.snapLinesY, snapRangeY)
               let snap = this.getSnapLines(docField.x, docField.y)
               target.style.left = snap.x + 'px'
               target.style.top = snap.y + 'px'
@@ -717,6 +713,12 @@
       this.docFields.map(docField => { return docField.interactable }).forEach(interactable => {
         utils.unsetInteractable(interactable)
       })
+      // this.snapLinesX.map(snapLine => { return snapLine.interactable }).forEach(interactable => {
+      //   utils.unsetInteractable(interactable)
+      // })
+      // this.snapLinesY.map(snapLine => { return snapLine.interactable }).forEach(interactable => {
+      //   utils.unsetInteractable(interactable)
+      // })
 
       utils.unsetInteractable(this.toolInteractable)
       utils.unsetInteractable(this.dropzoneInteractable)

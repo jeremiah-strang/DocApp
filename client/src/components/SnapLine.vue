@@ -9,7 +9,7 @@
 
   export default {
     name: 'snap-line',
-    props: ['snapLine'],
+    props: ['snapLine', 'scrollWrap'],
     data () {
       return {
       }
@@ -46,8 +46,21 @@
           },
           autoScroll: true,
           onmove: (event) => {
-            // let target = event.target
-            let pos = this.snapLine.position + (this.snapLine.isVertical ? event.dx : event.dy)
+            let pos
+            if (this.snapLine.isVertical) {
+              pos = this.snapLine.position + event.dx
+              if (this.scrollWrap) {
+                pos += this.scrollWrap.scrollLeft
+              }
+              pos = Math.min(850, pos)
+            } else {
+              pos = this.snapLine.position + event.dy
+              if (this.scrollWrap) {
+                pos += this.scrollWrap.scrollTop
+              }
+              pos = Math.min(1100, pos)
+            }
+            pos = Math.max(0, pos)
             this.snapLine.position = pos
           },
           onend: (event) => {
