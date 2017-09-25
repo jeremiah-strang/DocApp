@@ -90,27 +90,28 @@
 
     i.fa {
       color: $dark3;
-      cursor: move;
     }
 
     &.snap-line-y {
       border-width: 0 0 2px 0;
+      cursor: ns-resize;
       height: 0;
       width: 100%;
       i.fa {
+        left: -6.5px;
         position: absolute;
         top: -8px;
-        left: -6.5px;
       }
     }
 
     &.snap-line-x {
       border-width: 0 2px 0 0;
+      cursor: ew-resize;
       height: 100%;
       i.fa {
+        left: -4px;
         position: absolute;
         top: -13px;
-        left: -4px;
       }
     }
   }
