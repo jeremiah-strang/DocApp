@@ -118,17 +118,14 @@
           <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
             class="input-wrap">
             <h4>Font</h4>
-            <select v-model="selectedDocField.fontFamily" v-on:change="onFontChanged">
+            <select v-model="selectedDocField.fontFamily" v-on:change="onFontChanged" 
+                    style="width: 110px;" class="float-left">
               <option :value="FontOption.helvetica">Helvetica</option>
               <option :value="FontOption.courier">Courier</option>
               <option :value="FontOption.times">Times</option>
             </select>
-          </div>
-
-          <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
-            class="input-wrap">
-            <h4>Font Size</h4>
-            <select v-model="selectedDocField.fontSize" v-on:change="onFontChanged">
+            <select v-model="selectedDocField.fontSize" v-on:change="onFontChanged"
+                    style="width: 60px; margin-left: 4px;" class="float-left">
               <option :value="8">8pt</option>
               <option :value="9">9pt</option>
               <option :value="10">10pt</option>
@@ -139,6 +136,10 @@
               <option :value="15">15pt</option>
             </select>
           </div>
+
+<!--           <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
+            class="input-wrap">
+          </div> -->
         </div>
       </div>
     </div>
