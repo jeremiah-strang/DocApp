@@ -9,12 +9,10 @@
 
   export default {
     name: 'snap-line',
-    props: ['snapLine', 'scrollWrap'],
+    props: ['snapLine', 'scrollWrap', 'onLineMoved'],
     data () {
       return {
       }
-    },
-    watch: {
     },
     computed: {
       classes: function () {
@@ -31,10 +29,6 @@
         return `${this.snapLine.position}`
       },
     },
-    methods: {
-    },
-    created: function () {
-    },
     mounted: function () {
       this.snapLine.interactable = interact(this.$refs.snapLine)
         .draggable({
@@ -46,6 +40,7 @@
           },
           autoScroll: true,
           onmove: (event) => {
+            let oldPos = this.snapLine.position
             let pos
             if (this.snapLine.isVertical) {
               pos = this.snapLine.position + event.dx
@@ -62,6 +57,9 @@
             }
             pos = Math.max(0, pos)
             this.snapLine.position = pos
+            if (typeof this.onLineMoved === 'function') {
+              this.onLineMoved(this.snapLine, oldPos)
+            }
           },
           onend: (event) => {
           }

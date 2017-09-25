@@ -33,12 +33,12 @@
     </div>
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
-      <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="item.uuid"
-                 :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"></snap-line>
       <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="item.uuid"
-                 :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"></snap-line>
-      <!-- <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="'x' + item.position"
-                 :isVertical="true" :position="item.position"></snap-line> -->
+                 :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"
+                 :on-line-moved="onSnapLineMoved"></snap-line>
+      <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="item.uuid"
+                 :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"
+                 :on-line-moved="onSnapLineMoved"></snap-line>
 
       <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
                  :on-select="onSelectDocField" :id="'_' + item.uuid" 
@@ -388,6 +388,25 @@
         }
         if (snapY) {
           snapY.selected = true
+        }
+      },
+
+      /*
+       *
+       */
+      onSnapLineMoved: function (snapLine, oldPos) {
+        if (snapLine.isVertical) {
+          this.docFields.forEach(df => {
+            if (df.x === oldPos) {
+              df.x = snapLine.position
+            }
+          })
+        } else {
+          this.docFields.forEach(df => {
+            if (df.y === oldPos) {
+              df.y = snapLine.position
+            }
+          })
         }
       },
 
