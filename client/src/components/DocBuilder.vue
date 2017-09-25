@@ -1,5 +1,10 @@
 <template>
-  <div ref="docBuilder" class="doc-builder">
+  <div ref="docBuilder"
+       v-on:keyup.up="moveDocFieldUp"
+       v-on:keyup.down="moveDocFieldDown"
+       v-on:keyup.left="moveDocFieldLeft"
+       v-on:keyup.right="moveDocFieldRight"
+       class="doc-builder">
     <div class="settings-wrap">
       <div class="panel-wrapper" style="margin-bottom: 4px;">
         <label class="settings-label float-left">Document Name</label>
@@ -349,6 +354,42 @@
             name: '',
             selected: false,
           }
+        }
+      },
+
+      /*
+       * Moves the selected doc field up 1 pixel
+       */
+      moveDocFieldUp: function () {
+        if (this.selectedDocField.y > 0) {
+          this.selectedDocField.y--
+        }
+      },
+
+      /*
+       * Moves the selected doc field down 1 pixel
+       */
+      moveDocFieldDown: function () {
+        if (this.selectedDocField.y < 1100) {
+          this.selectedDocField.y++
+        }
+      },
+
+      /*
+       * Moves the selected doc field left 1 pixel
+       */
+      moveDocFieldLeft: function () {
+        if (this.selectedDocField.x > 0) {
+          this.selectedDocField.x--
+        }
+      },
+
+      /*
+       * Moves the selected doc field right 1 pixel
+       */
+      moveDocFieldRight: function () {
+        if (this.selectedDocField.x < 850) {
+          this.selectedDocField.x++
         }
       },
     },
