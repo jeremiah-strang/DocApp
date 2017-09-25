@@ -135,6 +135,7 @@
 
     .fa.fa-trash {
       position: absolute;
+      top: 3px;
       right: 3px;
       color: rgba($dark1, 0.5);
       cursor: pointer;
