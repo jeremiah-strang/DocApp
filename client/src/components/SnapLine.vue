@@ -81,7 +81,6 @@
     font-size: 18px;
 
     &.selected {
-      @extend .shadowed;
       border-color: rgba($theme-color, 0.5);
 
       i.fa {
