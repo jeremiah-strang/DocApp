@@ -131,6 +131,7 @@
     .doc-field-text {
       @extend .pnl;
       width: 100%;
+      white-space: nowrap;
     }
 
     .fa.fa-trash {
