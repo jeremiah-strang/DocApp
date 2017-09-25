@@ -75,6 +75,16 @@
     &[data-field-type=checksq] {
       border-color: transparent;
     }
+    
+    &:hover {
+      @extend .shadowed;
+      background-color: rgba($dark1, 0.50);
+      color: $font-light;
+
+      .fa.fa-trash {
+        color: $font-light;
+      }
+    }
 
     &.selected {
       @extend .shadowed;
@@ -90,7 +100,32 @@
       .fa.fa-trash {
         color: rgba($theme-color, 0.5);
       }
+    
+      &:hover {
+        @extend .shadowed;
+        background-color: $theme-color;
+        color: $font-light;
+
+        .fa.fa-trash {
+          color: $font-light;
+        }
+      }
     }
+    // &.selected {
+    //   @extend .shadowed;
+    //   background-color: $theme-color;
+    //   color: $font-light;
+
+    //   &[data-field-type=check],
+    //   &[data-field-type=checkx],
+    //   &[data-field-type=checksq] {
+    //     border-color: transparent;
+    //   }
+
+    //   .fa.fa-trash {
+    //     color: $font-light;
+    //   }
+    // }
 
     .doc-field-text {
       @extend .pnl;
