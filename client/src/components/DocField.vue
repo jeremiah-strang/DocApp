@@ -78,7 +78,7 @@
     
     &:hover {
       @extend .shadowed;
-      background-color: rgba($dark1, 0.50);
+      background-color: rgba($dark1, 0.60);
       color: $font-light;
 
       .fa.fa-trash {
@@ -103,7 +103,7 @@
     
       &:hover {
         @extend .shadowed;
-        background-color: $theme-color;
+        background-color: rgba($theme-color, 0.70);
         color: $font-light;
 
         .fa.fa-trash {
