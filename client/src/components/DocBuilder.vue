@@ -427,13 +427,13 @@
       onSnapLineMoved: function (snapLine, oldPos) {
         if (snapLine.isVertical) {
           this.docFields.forEach(df => {
-            if (df.x === oldPos) {
+            if (Math.abs(snapLine.position - df.x) <= snapRangeX) {
               df.x = snapLine.position
             }
           })
         } else {
           this.docFields.forEach(df => {
-            if (df.y === oldPos) {
+            if (Math.abs(snapLine.position - df.y) <= snapRangeY) {
               df.y = snapLine.position
             }
           })
