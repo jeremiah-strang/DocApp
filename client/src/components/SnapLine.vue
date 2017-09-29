@@ -5,6 +5,7 @@
 </template>
 
 <script>
+  // import utils from '../utils/utils'
   import interact from 'interact.js'
 
   export default {
@@ -67,6 +68,13 @@
         .on('dragstart', (event) => {
         })
     },
+
+    // /**
+    //  * Unset draggable elements before the component is destroyed
+    //  */
+    // beforeDestroy: function () {
+    //   utils.unsetInteractable(this.snapLine.interactable)
+    // },
   }
 </script>
 

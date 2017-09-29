@@ -244,6 +244,12 @@ button, .btn, input[type=submit] {
     border: none;
     color: $dark1;
     padding: 2px;
+
+    &:disabled {
+      cursor: not-allowed;
+      color: $gray7;
+      opacity: 1;
+    }
   }
 
   &.btn-primary {

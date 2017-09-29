@@ -26,21 +26,33 @@
     </div>
 
     <div class="surface-toolbar">
-      <div class="checkbox-wrap">
-        <input v-model="enableSnap" id="show-snap-lines-chk" type="checkbox">
-        <label for="show-snap-lines-chk">Use Snap Lines</label>
+      <div class="use-snap-chk-wrap checkbox-wrap">
+        <input v-model="enableSnap" id="use-snap-chk" type="checkbox">
+        <label for="use-snap-chk">Use Snap Lines</label>
+      </div>
+
+      <div class="page-nav-wrap">
+        <button v-on:click="prevPage" :disabled="selectedPage.pageNo < 2" class="btn btn-plain">
+          <i class="fa fa-arrow-left"></i>
+        </button>
+        <span>Page {{ selectedPage.pageNo }} of {{ pdfDoc.numPages }}</span>
+        <button v-on:click="nextPage" :disabled="selectedPage.pageNo === pdfDoc.numPages" class="btn btn-plain">
+          <i class="fa fa-arrow-right"></i>
+        </button>
       </div>
     </div>
+
     <div ref="docBuilderSurface" class="doc-builder-surface">
 
       <snap-line v-show="enableSnap" v-for="item in snapLinesX" :key="item.uuid"
                  :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"
                  :on-line-moved="onSnapLineMoved"></snap-line>
+
       <snap-line v-show="enableSnap" v-for="item in snapLinesY" :key="item.uuid"
                  :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"
                  :on-line-moved="onSnapLineMoved"></snap-line>
 
-      <doc-field v-for="(item, index) in docFields" :doc-field="item" :key="item.uuid"
+      <doc-field v-for="(item, index) in selectedPage.docFields" :doc-field="item" :key="item.uuid"
                  :on-select="onSelectDocField" :id="'_' + item.uuid" 
                  v-on:delete-doc-field="onDeleteDocField(item, index)">
       </doc-field>
@@ -137,9 +149,6 @@
             </select>
           </div>
 
-<!--           <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
-            class="input-wrap">
-          </div> -->
         </div>
       </div>
     </div>
@@ -173,13 +182,25 @@
         enableSnap: true,
         previewImageSrc: '',
         name: '',
-        docFields: [],
-        snapLinesX: [], // [50, 800],
-        snapLinesY: [], // [50, 1050],
+        pages: [
+          {
+            pageNo: 1,
+            docFields: [],
+          }
+        ],
+        pdfDoc: {
+          numPages: 1,
+        },
+        selectedPage: {
+          pageNo: 1,
+          docFields: [],
+        },
         selectedDocField: {
           name: '',
           selected: false,
         },
+        snapLinesX: [],
+        snapLinesY: [],
         sharedDocFieldProps: {
           text: getDefaultSharedProps(),
           number: getDefaultSharedProps(),
@@ -222,24 +243,38 @@
         let fileType = this.$refs.fileUploadInput.files[0].type
         if (fileType === 'application/pdf') {
           // let pdfUrl = URL.createObjectURL(fileInput.get(0).files[0])
-
           pdfjs.getDocument({ url: URL.createObjectURL(fileInput.get(0).files[0]) })
           .then((pdfDoc) => {
-            // let pageCt = pdfDoc.numPages
-            pdfDoc.getPage(1).then((page) => {
-              let canvas = this.$refs.docBuilderCanvas
-              let scale = canvas.width / page.getViewport(1).width
-              let viewport = page.getViewport(scale)
-              canvas.height = viewport.height
-
-              let renderContext = {
-                canvasContext: canvas.getContext('2d'),
-                viewport: viewport
-              }
-              page.render(renderContext).then(() => {
-                $(canvas).show()
+            this.pdfDoc = pdfDoc
+            let pageCt = pdfDoc.numPages
+            this.pages = []
+            for (let pNo = 1; pNo <= pageCt; pNo++) {
+              this.pages.push({
+                pageNo: pNo,
+                docFields: [],
               })
-            })
+            }
+            if (this.pages.length > 0) {
+              let docFields = this.selectedPage.docFields
+              this.selectPage(this.pages[0])
+              this.selectedPage.docFields = docFields
+            } else {
+              this.pages.push(this.selectedPage)
+            }
+            // pdfDoc.getPage(1).then((page) => {
+            //   let canvas = this.$refs.docBuilderCanvas
+            //   let scale = canvas.width / page.getViewport(1).width
+            //   let viewport = page.getViewport(scale)
+            //   canvas.height = viewport.height
+
+            //   let renderContext = {
+            //     canvasContext: canvas.getContext('2d'),
+            //     viewport: viewport
+            //   }
+            //   page.render(renderContext).then(() => {
+            //     $(canvas).show()
+            //   })
+            // })
           }).catch(err => {
             console.error(err)
           })
@@ -256,6 +291,52 @@
         //     this.showEditor = true
         //   }
         // })
+      },
+
+      /*
+       * Selects the previous page
+       */
+      prevPage: function () {
+        if (this.selectedPage.pageNo > 1) {
+          this.selectPage(this.selectedPage.pageNo - 2)
+        }
+      },
+
+      /*
+       * Selects the next page
+       */
+      nextPage: function () {
+        if (this.selectedPage.pageNo <= this.pages.length) {
+          this.selectPage(this.selectedPage.pageNo)
+        }
+      },
+
+      /*
+       * Selects a page
+       */
+      selectPage: function (selectedPage) {
+        if (typeof selectedPage === 'number' && this.pages.length > selectedPage) {
+          this.selectedPage = this.pages[selectedPage]
+        } else {
+          this.selectedPage = selectedPage
+        }
+        if (this.pdfDoc) {
+          this.pdfDoc.getPage(this.selectedPage.pageNo).then((page) => {
+            let canvas = this.$refs.docBuilderCanvas
+            let scale = canvas.width / page.getViewport(1).width
+            let viewport = page.getViewport(scale)
+            canvas.height = viewport.height
+
+            let renderContext = {
+              canvasContext: canvas.getContext('2d'),
+              viewport: viewport
+            }
+
+            page.render(renderContext).then(() => {
+              $(canvas).show()
+            })
+          })
+        }
       },
 
       /*
@@ -289,7 +370,7 @@
         docField.text = getDefaultFieldText(docField)
 
         this.onSelectDocField(docField)
-        this.docFields.push(docField)
+        this.selectedPage.docFields.push(docField)
 
         docField.interactable = interact('#_' + docField.uuid)
           .draggable({
@@ -426,13 +507,13 @@
        */
       onSnapLineMoved: function (snapLine, oldPos) {
         if (snapLine.isVertical) {
-          this.docFields.forEach(df => {
+          this.selectedPage.docFields.forEach(df => {
             if (Math.abs(snapLine.position - df.x) <= snapRangeX) {
               df.x = snapLine.position
             }
           })
         } else {
-          this.docFields.forEach(df => {
+          this.selectedPage.docFields.forEach(df => {
             if (Math.abs(snapLine.position - df.y) <= snapRangeY) {
               df.y = snapLine.position
             }
@@ -476,7 +557,7 @@
           sn.selected = false
         })
 
-        this.docFields.forEach(df => {
+        this.selectedPage.docFields.forEach(df => {
           df.selected = df.uuid === docField.uuid
         })
         this.selectedDocField = docField || {
@@ -499,7 +580,7 @@
        * Deletes a doc field at the given index
        */
       onDeleteDocField: function (docField, index) {
-        this.docFields.splice(index, 1)
+        this.selectedPage.docFields.splice(index, 1)
         if (this.selectedDocField.uuid === docField.uuid) {
           this.selectedDocField.selected = false
           this.selectedDocField = {
@@ -770,7 +851,7 @@
      * Unset draggable elements before the component is destroyed
      */
     beforeDestroy: function () {
-      this.docFields.map(docField => { return docField.interactable }).forEach(interactable => {
+      this.selectedPage.docFields.map(docField => { return docField.interactable }).forEach(interactable => {
         utils.unsetInteractable(interactable)
       })
       // this.snapLinesX.map(snapLine => { return snapLine.interactable }).forEach(interactable => {
@@ -864,6 +945,21 @@
       overflow: hidden;
       padding: 6px 6px;
       width: 852px;
+
+      .use-snap-chk-wrap {
+        display: inline-block;
+        float: left;
+      }
+
+      .page-nav-wrap {
+        @extend .pnl;
+        display: inline-block;
+        float: right;
+
+        button.btn.btn-plain {
+          padding: 0;
+        }
+      }
     }
 
     .settings-wrap {
@@ -871,8 +967,8 @@
       @extend .pad1;
       @extend .shadowed;
       background-color: $dark1;
-      border-top-right-radius: 8px;
       border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
       color: $font-light;
       margin-bottom: 9px;
       width: 1062px;
@@ -883,9 +979,9 @@
 
       .settings-btn-wrap {
         @extend .pad1;
+        bottom: 0;
         position: absolute;
         right: 0;
-        bottom: 0;
       }
     }
 
@@ -897,7 +993,7 @@
       display: inline-block;
       min-height: 1102px;
       min-width: 852px;
-        overflow: visible;
+      overflow: visible;
 
       .doc-builder-img {
         @extend .box;
