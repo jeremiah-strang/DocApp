@@ -69,7 +69,7 @@
     padding: 3px 3px 3px 3px;
     padding-right: 6px;
     position: absolute;
-    z-index: 1;
+    z-index: 3;
 
     &[data-field-type=check],
     &[data-field-type=checkx],

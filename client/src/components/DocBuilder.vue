@@ -1060,6 +1060,7 @@
       margin-bottom: 4px;
       overflow: hidden;
       padding: 3px;
+      z-index: 3;
 
       &[data-field-type=check],
       &[data-field-type=checkx],
