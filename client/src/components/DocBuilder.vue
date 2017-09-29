@@ -943,7 +943,7 @@
       border-width: 1px 1px 0 1px;
       color: $font-dark;
       overflow: hidden;
-      padding: 6px 6px;
+      padding: 6px 8px;
       width: 852px;
 
       .use-snap-chk-wrap {
@@ -958,6 +958,11 @@
 
         button.btn.btn-plain {
           padding: 0 2px;
+          border-radius: 4px;
+
+          i {
+            font-size: 14px;
+          }
         }
       }
     }

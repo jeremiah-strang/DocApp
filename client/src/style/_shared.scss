@@ -215,7 +215,7 @@ button, .btn, input[type=submit] {
   &:active {
     @include box-shadow(0px 0px 10px 0px rgba(0, 0, 0, 0.20));
 
-    background-color: darken($gray3, 5%);
+    background-color: $gray4;
     border-color: darken($font-dark, 5%);
 
     &.btn-danger {
@@ -224,7 +224,7 @@ button, .btn, input[type=submit] {
     }
 
     &.btn-plain {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: $gray4;
     }
 
     &.btn-primary {
