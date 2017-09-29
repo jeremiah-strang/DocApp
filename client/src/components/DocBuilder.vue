@@ -957,7 +957,7 @@
         float: right;
 
         button.btn.btn-plain {
-          padding: 0;
+          padding: 0 2px;
         }
       }
     }
