@@ -169,7 +169,7 @@
             <i v-show="!mobileEditorMaximized" class="fa fa-window-maximize"></i>
           </button>
 
-          <button v-on:click="toggleMobileEditorOpen(false)"" class="btn btn-plain">
+          <button v-on:click="toggleMobileEditorOpen(false)" class="btn btn-plain">
             <i class="fa fa-close"></i>
           </button>
         </div>
@@ -179,9 +179,9 @@
         <div class="mobile-app-surface-wrap">
           <div class="mobile-app-surface">
             <h3>{{ name }}</h3>
-            <div v-show="allDocFields.length === 0" class="w100 text-center">
+            <!-- <div v-show="allDocFields.length === 0" class="w100 text-center">
               (no fields added yet)
-            </div>
+            </div> -->
 
             <div v-for="(item, index) in allDocFields" class="mobile-app-input-wrap">
               <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) === -1"
