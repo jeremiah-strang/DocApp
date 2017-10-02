@@ -5,8 +5,14 @@ import XDate from 'xdate'
 import utils from '../utils/utils'
 import DocFieldType from '../models/DocFieldType'
 
+/**
+ *
+ */
 export default class {
 
+  /**
+   *
+   */
   constructor (opts, sharedProps) {
     this.uuid = uuidv4()
     this.type = opts.type
@@ -35,6 +41,9 @@ export default class {
     this.updateText()
   }
 
+  /**
+   *
+   */
   updateText () {
     switch (this.type) {
       case DocFieldType.text:
@@ -62,6 +71,9 @@ export default class {
     }
   }
 
+  /**
+   *
+   */
   moveY (px, snapLines) {
     let newY = this.y + px
     if (newY >= 0 && newY + this.height <= 1100) {
@@ -82,6 +94,9 @@ export default class {
     }
   }
 
+  /**
+   *
+   */
   moveX (px, snapLines) {
     let newX = this.x + px
     if (newX >= 0 && newX < 830) {
