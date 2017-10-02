@@ -245,7 +245,7 @@
     data () {
       return {
         mobileEditorMaximized: true,
-        mobileEditorOpen: true,
+        mobileEditorOpen: false,
         showEditor: false,
         enableSnap: true,
         previewImageSrc: '',
