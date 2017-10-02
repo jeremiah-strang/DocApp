@@ -166,7 +166,7 @@
     <div v-show="mobileEditorOpen"class="mobile-app-editor toolbox-wrap"
          :class="!mobileEditorMaximized ? 'minimized' : ''" >
       <div class="toolbox-hdr">
-        <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>&nbsp;
+        <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
         Mobile App Preview
         <div class="toolbox-hdr-btn-wrap">
 
