@@ -171,7 +171,7 @@
     }
 
     &.mobile-app-editor {
-      @extend .shadowed;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
       background-color: #fff;
       background-color: $gray3;
       border-color: $gray6;
