@@ -7,8 +7,10 @@
        class="doc-builder">
     <div class="settings-wrap">
       <div class="panel-wrapper" style="margin-bottom: 4px;">
-        <label class="settings-label float-left">Document Name</label>
-        <input v-model="name" type="text">
+        <label class="settings-label float-left">Document Name
+          <span v-show="!name" class="red">*</span>
+        </label>
+        <input v-model="name" type="text" class="doc-name-input">
       </div>
 
       <div class="panel-wrapper">
@@ -175,7 +177,9 @@
         <div class="mobile-app-surface-wrap">
           <div class="mobile-app-surface">
             <h2>{{ name }}</h2>
-
+            <div v-show="allDocFields.length === 0" class="w100 text-center">
+              (no fields added yet)
+            </div>
             <div v-for="(item, index) in allDocFields" class="mobile-app-input-wrap">
               <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) === -1"
                    class="mobile-app-input-label">{{ item.name }}</div>
@@ -191,8 +195,8 @@
             <div class="mobile-app-bottom">
               <h4>Name for this document</h4>
               <input type="text" class="w100" disabled>
-              <button><i class="fa fa-save"></i>&nbsp;Save this document</button>
-              <button><i class="fa fa-envelope-o"></i>&nbsp;Save & email this document</button>
+              <div class="mobile-app-btn"><i class="fa fa-save"></i>&nbsp;Save this document</div>
+              <div class="mobile-app-btn"><i class="fa fa-envelope-o"></i>&nbsp;Save & email this document</div>
             </div>
           </div>
         </div>
@@ -877,6 +881,10 @@
     min-width: 1237px;
     min-height: 1225px;
 
+    .doc-name-input {
+      width: 250px;
+    }
+
     .settings-wrap {
       @extend .pad1;
       @extend .pnl;
@@ -889,7 +897,7 @@
       width: 1063px;
 
       .settings-label {
-        width: 124px;
+        width: 130px;
       }
 
       .settings-btn-wrap {
@@ -1152,8 +1160,12 @@
               @extend .w100;
               padding: 12px 4px 4px 4px;
 
-              button {
+              .mobile-app-btn {
                 @extend .w100;
+                padding: 4px;
+                border-radius: 4px;
+                text-align: center;
+                box-sizing: border-box;
                 background-color: $dark1;
                 color: $theme-blue;
                 margin-top: 4px;

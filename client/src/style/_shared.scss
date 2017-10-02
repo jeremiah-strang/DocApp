@@ -115,6 +115,10 @@ $font-size:               15px;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.10), 0 5px 5px 0 rgba(0, 0, 0, 0.10);
 }
 
+.red {
+  color: $theme-red;
+}
+
 html {
   @extend .pnl;
   @extend .hw100;
