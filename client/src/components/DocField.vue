@@ -11,11 +11,6 @@
 </template>
 
 <script>
-  // import interact from 'interact.js'
-  // import Vue from 'vue'
-  // import Vuex from 'vuex'
-  // Vue.use(Vuex)
-
   export default {
     name: 'doc-field',
     props: ['docField', 'onSelect'],
@@ -112,21 +107,6 @@
         }
       }
     }
-    // &.selected {
-    //   @extend .shadowed;
-    //   background-color: $theme-color;
-    //   color: $font-light;
-
-    //   &[data-field-type=check],
-    //   &[data-field-type=checkx],
-    //   &[data-field-type=checksq] {
-    //     border-color: transparent;
-    //   }
-
-    //   .fa.fa-trash {
-    //     color: $font-light;
-    //   }
-    // }
 
     .doc-field-text {
       @extend .pnl;

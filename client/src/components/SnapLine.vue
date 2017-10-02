@@ -5,7 +5,6 @@
 </template>
 
 <script>
-  // import utils from '../utils/utils'
   import interact from 'interact.js'
 
   export default {
@@ -82,7 +81,7 @@
   @import '../style/_shared.scss';
 
   .snap-line {
-    border-color: rgba($dark1, 0.5);
+    border-color: rgba($dark1, 0.25);
     border-style: dashed;
     position: absolute;
     z-index: 2;
@@ -123,43 +122,4 @@
       }
     }
   }
-  // .snap-line {
-  //   border-color: rgba($dark1, 0.5);
-  //   border-style: dashed;
-  //   position: absolute;
-  //   z-index: 2;
-
-  //   &.selected {
-  //     border-color: rgba($theme-color, 0.5);
-
-  //     i.fa {
-  //       color: $theme-color;
-  //     }
-  //   }
-
-  //   i.fa {
-  //     color: $dark3
-  //   }
-
-  //   &.snap-line-y {
-  //     border-width: 0 0 2px 0;
-  //     height: 0;
-  //     width: 100%;
-  //     i.fa {
-  //       position: absolute;
-  //       top: -6.5px;
-  //       left: -5.5px;
-  //     }
-  //   }
-
-  //   &.snap-line-x {
-  //     border-width: 0 2px 0 0;
-  //     height: 100%;
-  //     i.fa {
-  //       position: absolute;
-  //       top: -11px;
-  //       left: -3.5px;
-  //     }
-  //   }
-  // }
 </style>
