@@ -1,5 +1,5 @@
 <template>
-  <div class="mobile-app-editor toolbox-wrap">
+  <div class="mobile-app-editor toolbox-wrap" :style="style">
     <div class="toolbox-hdr">
       <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
       Mobile App Preview
@@ -76,6 +76,9 @@
     watch: {
     },
     computed: {
+      style: function () {
+        return `left: 270px; top: 41px;`
+      },
     },
     methods: {
 
@@ -172,9 +175,7 @@
       background-color: #fff;
       background-color: $gray3;
       border-color: $gray6;
-      left: 820px;
       position: absolute;
-      top: 111px;
 
       .toolbox-hdr {
         background-color: $gray2;

@@ -863,7 +863,7 @@
       border-top-right-radius: 8px;
       color: $font-light;
       margin-bottom: 9px;
-      width: 1063px;
+      width: 1062px;
 
       .settings-label {
         width: 150px;
@@ -890,7 +890,7 @@
       border-top-right-radius: 6px;
       border-width: 1px 1px 0 1px;
       color: $font-dark;
-      left: 212px;
+      // left: 212px;
       overflow: hidden;
       padding: 6px 8px;
       width: 852px;
@@ -930,7 +930,7 @@
       background-color: #fff;
       border: 1px solid $gray6;
       display: inline-block;
-      left: 212px;
+      // left: 212px;
       min-height: 1102px;
       min-width: 852px;
       overflow: visible;
@@ -1019,13 +1019,13 @@
     }
 
     .field-editor-wrap {
-      left: 52px;
+      left: 912px;
       top: 319px;
       width: 200px;
     }
 
     .toolbox-tool-wrap {
-      left: 52px;
+      left: 912px;
       top: 81px;
       width: 200px;
     }
