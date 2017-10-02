@@ -248,18 +248,25 @@
             .mobile-app-bottom {
               @extend .pnl;
               @extend .w100;
+              margin-bottom: 50px;
               padding: 12px 4px 4px 4px;
 
               .mobile-app-btn {
+                @extend .pnl;
                 @extend .w100;
                 background-color: $dark1;
                 border-radius: 4px;
                 box-sizing: border-box;
                 color: $theme-blue;
                 cursor: default;
-                margin-top: 4px;
-                padding: 4px;
+                margin-top: 6px;
+                padding: 6px;
                 text-align: center;
+
+                i {
+                  position: absolute;
+                  left: 9px;
+                }
               }
             }
           }
