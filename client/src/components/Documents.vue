@@ -33,5 +33,6 @@
   .documents {
     @extend .pnl;
     @extend .hw100;
+    overflow: auto;
   }
 </style>

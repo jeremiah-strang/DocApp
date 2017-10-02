@@ -92,7 +92,7 @@ $font-size:               15px;
   @extend .box;
   @extend .no-bmp;
 
-  overflow: auto;
+  overflow: hidden;
 }
 .hw100 {
   height: 100%;

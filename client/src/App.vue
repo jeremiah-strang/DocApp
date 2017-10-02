@@ -40,7 +40,6 @@
     },
     methods: {
       toggleNav: function () {
-        console.log(this.$route)
         this.isNavMaximized = !this.isNavMaximized
         if (this.isNavMaximized) {
           this.appNavWidth = appNavWidth
@@ -133,6 +132,7 @@
     padding-left: $app-nav-width;
     position: absolute;
     top: 0;
+    overflow: hidden;
 
     &.app-nav-maximized {
       padding-left: $app-nav-maximized-width;

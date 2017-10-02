@@ -152,6 +152,58 @@
         </div>
       </div>
     </div>
+
+    <div v-show="mobileEditorOpen"class="mobile-app-editor toolbox-wrap"
+         :class="!mobileEditorMaximized ? 'minimized' : ''" >
+      <div class="toolbox-hdr">
+        Mobile App Preview
+        <div class="toolbox-hdr-btn-wrap">
+
+          <button v-on:click="toggleMobileEditorMaximized" class="btn btn-plain">
+            <i v-show="mobileEditorMaximized" class="fa fa-window-minimize"></i>
+            <i v-show="!mobileEditorMaximized" class="fa fa-window-maximize"></i>
+          </button>
+
+          <button class="btn btn-plain">
+            <i class="fa fa-close"></i>
+          </button>
+        </div>
+      </div>
+
+      <div v-show="mobileEditorMaximized" class="toolbox">
+        <img src="static/iphone_outline_gray_sm.png" />
+        <div class="mobile-app-surface-wrap">
+          <div class="mobile-app-surface">
+            <h2>{{ name }}</h2>
+
+            <div v-for="(item, index) in allDocFields" class="mobile-app-input-wrap">
+              <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) === -1"
+                   class="mobile-app-input-label">{{ item.name }}</div>
+              <input v-if="item.type === DocFieldType.text" type="text" class="w100" disabled>
+              <input v-if="item.type === DocFieldType.number" type="number" class="w100" disabled>
+              <input v-if="item.type === DocFieldType.date" type="date" class="w100" disabled>
+              <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) > -1" class="checkbox-wrap">
+                <label :for="'mobile-app-input-chk' + item.uuid">{{ item.name }}</label>
+                <input id="'mobile-app-input-chk' + item.uuid"  type="checkbox">
+              </div>
+            </div>
+
+            <div class="mobile-app-bottom">
+              <h4>Name for this document</h4>
+              <input type="text" class="w100" disabled>
+              <button><i class="fa fa-save"></i>&nbsp;Save this document</button>
+              <button><i class="fa fa-envelope-o"></i>&nbsp;Save & email this document</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mobile-app-btns">
+          <i class="fa fa-home"></i>
+          <i class="fa fa-list"></i>
+          <i class="fa fa-cog"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -178,10 +230,13 @@
     name: 'doc-builder',
     data () {
       return {
+        mobileEditorMaximized: true,
+        mobileEditorOpen: true,
         showEditor: false,
         enableSnap: true,
         previewImageSrc: '',
-        name: '',
+        name: 'Document template 1',
+        allDocFields: [],
         pages: [
           {
             pageNo: 1,
@@ -360,6 +415,7 @@
 
         this.onSelectDocField(docField)
         this.selectedPage.docFields.push(docField)
+        this.allDocFields.push(docField)
 
         docField.interactable = interact('#_' + docField.uuid)
           .draggable({
@@ -571,6 +627,9 @@
        */
       onDeleteDocField: function (docField, index) {
         this.selectedPage.docFields.splice(index, 1)
+        this.allDocFields = this.allDocFields.filter(df => {
+          return df.uuid !== docField.uuid
+        })
         if (this.selectedDocField.uuid === docField.uuid) {
           this.selectedDocField.isSelected = false
           this.selectedDocField = {
@@ -606,6 +665,13 @@
        */
       moveDocFieldRight: function () {
         this.selectedDocField.moveX(1, this.snapLinesX)
+      },
+
+      /*
+       *
+       */
+      toggleMobileEditorMaximized: function () {
+        this.mobileEditorMaximized = !this.mobileEditorMaximized
       },
     },
 
@@ -803,10 +869,36 @@
   @import '../style/_shared.scss';
 
   .doc-builder {
-    @extend .pnl;
     @extend .hw100;
     @extend .pad1;
+    @extend .pnl;
     @extend .prevent-highlight;
+    z-index: 4;
+    min-width: 1237px;
+    min-height: 1225px;
+
+    .settings-wrap {
+      @extend .pad1;
+      @extend .pnl;
+      @extend .shadowed;
+      background-color: $dark1;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      color: $font-light;
+      margin-bottom: 9px;
+      width: 1063px;
+
+      .settings-label {
+        width: 124px;
+      }
+
+      .settings-btn-wrap {
+        @extend .pad1;
+        bottom: 0;
+        position: absolute;
+        right: 0;
+      }
+    }
 
     .surface-toolbar {
       @extend .pnl;
@@ -817,6 +909,7 @@
       border-top-right-radius: 6px;
       border-width: 1px 1px 0 1px;
       color: $font-dark;
+      left: 212px;
       overflow: hidden;
       padding: 6px 8px;
       width: 852px;
@@ -842,35 +935,13 @@
       }
     }
 
-    .settings-wrap {
-      @extend .pnl;
-      @extend .pad1;
-      @extend .shadowed;
-      background-color: $dark1;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-      color: $font-light;
-      margin-bottom: 9px;
-      width: 1062px;
-
-      .settings-label {
-        width: 124px;
-      }
-
-      .settings-btn-wrap {
-        @extend .pad1;
-        bottom: 0;
-        position: absolute;
-        right: 0;
-      }
-    }
-
     .doc-builder-surface {
       @extend .pnl;
       @extend .shadowed;
       background-color: #fff;
       border: 1px solid $gray6;
       display: inline-block;
+      left: 212px;
       min-height: 1102px;
       min-width: 852px;
       overflow: visible;
@@ -886,21 +957,53 @@
       @extend .shadowed;
       background-color: $dark1;
       border-radius: 8px;
-      left: 914px;
+      border: 1px solid $dark10;
       position: fixed;
-      width: 200px;
       z-index: 3;
 
       .toolbox-hdr {
         @extend .pnl;
-        border-bottom: 1px solid $dark10;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
         color: $font-light;
         padding: 6px;
         width: 100%;
+
+        .toolbox-hdr-btn-wrap {
+          position: absolute;
+          right: 2px;
+          top: 4px;
+
+          .btn {
+            color: $font-light;
+
+            &:hover {
+              background-color: rgba($font-light, .2);
+            }
+
+            &.btn-plain {
+              padding: 2px 4px;
+            }
+
+            i.fa.fa-window-minimize,
+            i.fa.fa-window-maximize {
+              font-size: 11px;
+            }
+          }
+        }
+      }
+
+      &.minimized {
+        .toolbox-hdr {
+          border-radius: 8px;
+        }
       }
 
       .toolbox {
         @extend .pnl;
+        border-top: 1px solid $dark10;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
         color: $font-light;
         height: 100%;
         overflow: visible;
@@ -922,11 +1025,15 @@
     }
 
     .field-editor-wrap {
-      top: 310px;
+      left: 52px;
+      top: 319px;
+      width: 200px;
     }
 
     .toolbox-tool-wrap {
-      top: 77px;
+      left: 52px;
+      top: 81px;
+      width: 200px;
     }
 
     .toolbox-tool {
@@ -980,6 +1087,102 @@
         &.selected {
           background-color: rgba($theme-color, 0.15);
           border-color: rgba($theme-color, 0.5);
+        }
+      }
+    }
+
+    .mobile-app-editor {
+      @extend .shadowed;
+      position: absolute;
+      top: 111px;
+      left: 820px;
+      background-color: #fff;
+      background-color: $gray3;
+      border-color: $gray6;
+
+      .toolbox-hdr {
+        border-color: $gray6;
+        background-color: $gray2;
+        color: $font-dark;
+        min-width: 324px;
+
+        .toolbox-hdr-btn-wrap {
+          .btn {
+            color: $font-dark;
+          }
+        }
+      }
+
+      .toolbox {
+        background-color: transparent;
+        padding-bottom: 3px;
+
+        .mobile-app-surface-wrap {
+          position: absolute;
+          width: 277px;
+          height: 455px;
+          top: 58px;
+          left: 24px;
+          overflow-y: auto;
+          background-color: #fff;
+
+          .mobile-app-surface {
+            @extend .pnl;
+            @extend .w100;
+            min-height: 456px;
+            background-color: $gray3;
+            color: $font-dark;
+
+            > h2:first-child {
+              padding: 4px;
+            }
+
+            .mobile-app-input-wrap {
+              @extend .pnl;
+              @extend .w100;
+              padding: 4px;
+              background-color: #fff;
+              border: 1px solid $dark10;
+              border-width: 1px 0;
+              margin-top: 4px;
+            }
+
+            .mobile-app-bottom {
+              @extend .pnl;
+              @extend .w100;
+              padding: 12px 4px 4px 4px;
+
+              button {
+                @extend .w100;
+                background-color: $dark1;
+                color: $theme-blue;
+                margin-top: 4px;
+              }
+            }
+          }
+        }
+
+        .mobile-app-btns {
+          position: absolute;
+          width: 277px;
+          height: 40px;
+          top: 513px;
+          left: 24px;
+          background-color: $dark1;
+
+          i.fa {
+            box-sizing: border-box;
+            float: left;
+            width: 92px;
+            text-align: center;
+            font-size: 24px;
+            padding: 8px;
+            color: $theme-blue;
+
+            &:first-child {
+              background-color: $dark2;
+            }
+          }
         }
       }
     }
