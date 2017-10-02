@@ -196,7 +196,7 @@
         showEditor: false,
         enableSnap: true,
         previewImageSrc: '',
-        name: 'Document template 1',
+        name: 'Doc template 1',
         allDocFields: [],
         pages: [
           {
@@ -519,15 +519,23 @@
       onSnapLineMoved: function (snapLine, oldPos) {
         if (snapLine.isVertical) {
           this.selectedPage.docFields.forEach(df => {
-            if (Math.abs(snapLine.position - df.x) <= snapRangeX) {
+            if ((snapLine.position >= df.x && oldPos <= df.x) ||
+                (snapLine.position <= df.x && oldPos >= df.x)) {
               df.x = snapLine.position
             }
+            // if (Math.abs(snapLine.position - df.x) <= snapRangeX) {
+            //   df.x = snapLine.position
+            // }
           })
         } else {
           this.selectedPage.docFields.forEach(df => {
-            if (Math.abs(snapLine.position - df.y) <= snapRangeY) {
+            if ((snapLine.position >= df.y && oldPos <= df.y) ||
+                (snapLine.position <= df.y && oldPos >= df.y)) {
               df.y = snapLine.position
             }
+            // if (Math.abs(snapLine.position - df.y) <= snapRangeY) {
+            //   df.y = snapLine.position
+            // }
           })
         }
       },
