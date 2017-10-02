@@ -22,6 +22,9 @@
       </div>
 
       <div class="settings-btn-wrap">
+        <button v-show="!mobileEditorOpen" v-on:click="toggleMobileEditorOpen(true)" 
+                class="btn btn-default"><i class="fa fa-mobile"></i>&nbsp;Mobile Preview</button>
+
         <button v-on:click="saveDocument" :disabled="!canSave"
                 class="btn btn-primary float-right">Save <i class="fa fa-save"></i></button>
       </div>
@@ -32,7 +35,7 @@
         <input v-model="enableSnap" id="use-snap-chk" type="checkbox">
         <label for="use-snap-chk">Use Snap Lines</label>
       </div>
-
+      
       <div class="page-nav-wrap">
         <button v-on:click="prevPage" :disabled="selectedPage.pageNo < 2" class="btn btn-plain">
           <i class="fa fa-arrow-left"></i>
@@ -166,27 +169,34 @@
             <i v-show="!mobileEditorMaximized" class="fa fa-window-maximize"></i>
           </button>
 
-          <button class="btn btn-plain">
+          <button v-on:click="toggleMobileEditorOpen(false)"" class="btn btn-plain">
             <i class="fa fa-close"></i>
           </button>
         </div>
       </div>
-
       <div v-show="mobileEditorMaximized" class="toolbox">
         <img src="static/iphone_outline_gray_sm.png" />
         <div class="mobile-app-surface-wrap">
           <div class="mobile-app-surface">
-            <h2>{{ name }}</h2>
+            <h3>{{ name }}</h3>
             <div v-show="allDocFields.length === 0" class="w100 text-center">
               (no fields added yet)
             </div>
+
             <div v-for="(item, index) in allDocFields" class="mobile-app-input-wrap">
               <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) === -1"
                    class="mobile-app-input-label">{{ item.name }}</div>
               <input v-if="item.type === DocFieldType.text" type="text" class="w100" disabled>
+              <textarea v-if="item.type === DocFieldType.drawing" rows="2" class="w100" disabled>
+              </textarea>
               <input v-if="item.type === DocFieldType.number" type="number" class="w100" disabled>
-              <input v-if="item.type === DocFieldType.date" type="date" class="w100" disabled>
-              <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) > -1" class="checkbox-wrap">
+              <input v-if="item.type === DocFieldType.phone" type="text" placeholder="   -   -    "
+                     disabled>
+              <input v-if="item.type === DocFieldType.date" type="text" :placeholder="item.text"
+                     disabled>
+              <i v-if="item.type === DocFieldType.date" class="fa fa-calendar"></i>
+              <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) > -1"
+                   class="checkbox-wrap">
                 <label :for="'mobile-app-input-chk' + item.uuid">{{ item.name }}</label>
                 <input id="'mobile-app-input-chk' + item.uuid"  type="checkbox">
               </div>
@@ -196,7 +206,7 @@
               <h4>Name for this document</h4>
               <input type="text" class="w100" disabled>
               <div class="mobile-app-btn"><i class="fa fa-save"></i>&nbsp;Save this document</div>
-              <div class="mobile-app-btn"><i class="fa fa-envelope-o"></i>&nbsp;Save & email this document</div>
+              <div class="mobile-app-btn"><i class="fa fa-envelope-o"></i>&nbsp;Save &amp; email this document</div>
             </div>
           </div>
         </div>
@@ -677,6 +687,17 @@
       toggleMobileEditorMaximized: function () {
         this.mobileEditorMaximized = !this.mobileEditorMaximized
       },
+
+      /*
+       *
+       */
+      toggleMobileEditorOpen: function (isOpen) {
+        if (typeof isOpen === 'boolean') {
+          this.mobileEditorOpen = isOpen
+        } else {
+          this.mobileEditorOpen = !this.mobileEditorOpen
+        }
+      },
     },
 
     /**
@@ -905,6 +926,10 @@
         bottom: 0;
         position: absolute;
         right: 0;
+
+        button:not(:last-child) {
+          margin-right: 4px;
+        }
       }
     }
 
@@ -921,6 +946,14 @@
       overflow: hidden;
       padding: 6px 8px;
       width: 852px;
+
+      button.btn.btn-plain {
+        padding: 0 2px;
+
+        i {
+          font-size: 14px;
+        }
+      }
 
       .use-snap-chk-wrap {
         display: inline-block;
@@ -1022,11 +1055,11 @@
           @extend .box;
         }
 
-        input[type=text] {
+        >input[type=text] {
           width: 100%;
         }
 
-        input[type=number], select, option {
+        >input[type=number], >select, >select >option {
           width: 120px;
         }
       }
@@ -1101,16 +1134,16 @@
 
     .mobile-app-editor {
       @extend .shadowed;
-      position: absolute;
-      top: 111px;
-      left: 820px;
       background-color: #fff;
       background-color: $gray3;
       border-color: $gray6;
+      left: 820px;
+      position: absolute;
+      top: 111px;
 
       .toolbox-hdr {
-        border-color: $gray6;
         background-color: $gray2;
+        border-color: $gray6;
         color: $font-dark;
         min-width: 324px;
 
@@ -1126,33 +1159,51 @@
         padding-bottom: 3px;
 
         .mobile-app-surface-wrap {
-          position: absolute;
-          width: 277px;
+          background-color: #fff;
           height: 455px;
-          top: 58px;
           left: 24px;
           overflow-y: auto;
-          background-color: #fff;
+          position: absolute;
+          top: 58px;
+          width: 277px;
 
           .mobile-app-surface {
             @extend .pnl;
             @extend .w100;
-            min-height: 456px;
             background-color: $gray3;
             color: $font-dark;
+            cursor: default;
+            min-height: 456px;
 
-            > h2:first-child {
+            > h3:first-child {
               padding: 4px;
             }
 
             .mobile-app-input-wrap {
               @extend .pnl;
               @extend .w100;
-              padding: 4px;
               background-color: #fff;
-              border: 1px solid $dark10;
               border-width: 1px 0;
+              border: 1px solid $dark10;
               margin-top: 4px;
+              padding: 4px;
+
+              .mobile-app-input-label {
+                font-size: 12px;
+                padding-bottom: 2px;
+              }
+
+              input[type=text] {
+                width: 120px;
+
+                &.w100 {
+                  width: 100%;
+                }
+              }
+
+              textarea {
+                resize: none;
+              }
             }
 
             .mobile-app-bottom {
@@ -1162,13 +1213,14 @@
 
               .mobile-app-btn {
                 @extend .w100;
-                padding: 4px;
-                border-radius: 4px;
-                text-align: center;
-                box-sizing: border-box;
                 background-color: $dark1;
+                border-radius: 4px;
+                box-sizing: border-box;
                 color: $theme-blue;
+                cursor: default;
                 margin-top: 4px;
+                padding: 4px;
+                text-align: center;
               }
             }
           }
