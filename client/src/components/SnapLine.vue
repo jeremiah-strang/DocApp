@@ -1,6 +1,7 @@
 <template>
   <div ref='snapLine' :class="classes" :style="style" :title="title">
-    <i :class="snapLine.isVertical ? 'fa fa-caret-down' : 'fa fa-caret-right'"></i>    
+    <i :class="snapLine.isVertical ? 'fa fa-caret-down' : 'fa fa-caret-right'"></i>
+    <!-- <i class="fa fa-trash"></i> -->
   </div>
 </template>
 
@@ -67,13 +68,6 @@
         .on('dragstart', (event) => {
         })
     },
-
-    // /**
-    //  * Unset draggable elements before the component is destroyed
-    //  */
-    // beforeDestroy: function () {
-    //   utils.unsetInteractable(this.snapLine.interactable)
-    // },
   }
 </script>
 
@@ -87,11 +81,24 @@
     z-index: 2;
     font-size: 18px;
 
+    i.fa.fa-trash {
+      display: none;
+        font-size: 13px;
+    }
+
+    i.fa {
+      position: absolute;
+    }
+
     &.selected {
       border-color: rgba($theme-color, 0.5);
 
       i.fa {
         color: $theme-color;
+      }
+
+      i.fa.fa-trash {
+        display: block;
       }
     }
 
@@ -104,10 +111,20 @@
       cursor: ns-resize;
       height: 0;
       width: 100%;
-      i.fa {
+
+      i.fa.fa-caret-down,
+      i.fa.fa-caret-right {
         left: -6.5px;
-        position: absolute;
         top: -8px;
+      }
+
+      i.fa.fa-trash {
+        top: -8px;
+        left: 2px;
+        background-color: #fff;
+        padding: 2px;
+        border: 1px solid $theme-color;
+        border-radius: 4px;
       }
     }
 
@@ -115,9 +132,10 @@
       border-width: 0 2px 0 0;
       cursor: ew-resize;
       height: 100%;
-      i.fa {
+
+      i.fa.fa-caret-down,
+      i.fa.fa-caret-right {
         left: -4px;
-        position: absolute;
         top: -13px;
       }
     }
