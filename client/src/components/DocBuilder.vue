@@ -7,7 +7,7 @@
        class="doc-builder">
     <div class="settings-wrap">
       <div class="panel-wrapper" style="margin-bottom: 4px;">
-        <label class="settings-label float-left">Document Name
+        <label class="settings-label float-left">Doc Template Name
           <span v-show="!name" class="red">*</span>
         </label>
         <input v-model="name" type="text" class="doc-name-input">
@@ -160,11 +160,11 @@
           </div>
         </div>
       </div>
-
-      <mobile-app-editor :all-doc-fields="allDocFields" 
-                         :close-editor="closeMobileEditor" :name="name">           
-      </mobile-app-editor>
     </div>
+
+    <mobile-app-editor v-if="mobileEditorOpen" :all-doc-fields="allDocFields" 
+                       :close-editor="closeMobileEditor" :name="name">           
+    </mobile-app-editor>
   </div>
 </template>
 
@@ -866,7 +866,7 @@
       width: 1063px;
 
       .settings-label {
-        width: 130px;
+        width: 150px;
       }
 
       .settings-btn-wrap {
@@ -1081,129 +1081,6 @@
         &.selected {
           background-color: rgba($theme-color, 0.15);
           border-color: rgba($theme-color, 0.5);
-        }
-      }
-    }
-
-    .mobile-app-editor {
-      @extend .shadowed;
-      background-color: #fff;
-      background-color: $gray3;
-      border-color: $gray6;
-      left: 820px;
-      position: absolute;
-      top: 111px;
-
-      .toolbox-hdr {
-        background-color: $gray2;
-        border-color: $gray6;
-        color: $font-dark;
-        min-width: 324px;
-
-        i.fa.fa-ellipsis-v {
-          color: rgba(0, 0, 0, 0.2);
-        }
-
-        .toolbox-hdr-btn-wrap {
-          .btn {
-            color: $font-dark;
-          }
-        }
-      }
-
-      .toolbox {
-        background-color: transparent;
-        padding-bottom: 3px;
-
-        .mobile-app-surface-wrap {
-          background-color: #fff;
-          height: 455px;
-          left: 24px;
-          overflow-y: auto;
-          position: absolute;
-          top: 58px;
-          width: 277px;
-
-          .mobile-app-surface {
-            @extend .pnl;
-            @extend .w100;
-            background-color: $gray3;
-            color: $font-dark;
-            cursor: default;
-            min-height: 456px;
-
-            > h3:first-child {
-              padding: 4px;
-            }
-
-            .mobile-app-input-wrap {
-              @extend .pnl;
-              @extend .w100;
-              background-color: #fff;
-              border-width: 1px 0;
-              border: 1px solid $dark10;
-              margin-top: 4px;
-              padding: 4px;
-
-              .mobile-app-input-label {
-                font-size: 12px;
-                padding-bottom: 2px;
-              }
-
-              input[type=text] {
-                width: 120px;
-
-                &.w100 {
-                  width: 100%;
-                }
-              }
-
-              textarea {
-                resize: none;
-              }
-            }
-
-            .mobile-app-bottom {
-              @extend .pnl;
-              @extend .w100;
-              padding: 12px 4px 4px 4px;
-
-              .mobile-app-btn {
-                @extend .w100;
-                background-color: $dark1;
-                border-radius: 4px;
-                box-sizing: border-box;
-                color: $theme-blue;
-                cursor: default;
-                margin-top: 4px;
-                padding: 4px;
-                text-align: center;
-              }
-            }
-          }
-        }
-
-        .mobile-app-btns {
-          position: absolute;
-          width: 277px;
-          height: 40px;
-          top: 513px;
-          left: 24px;
-          background-color: $dark1;
-
-          i.fa {
-            box-sizing: border-box;
-            float: left;
-            width: 92px;
-            text-align: center;
-            font-size: 24px;
-            padding: 8px;
-            color: $theme-blue;
-
-            &:first-child {
-              background-color: $dark2;
-            }
-          }
         }
       }
     }
