@@ -66,7 +66,10 @@
               height="1100" width="850"></canvas>
 
       <div class="toolbox-tool-wrap toolbox-wrap">
-        <div class="toolbox-hdr">Toolbox</div>
+        <div class="toolbox-hdr">
+          <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
+          Toolbox
+        </div>
         <div ref="toolbox" class="toolbox">
           <div class="toolbox-tool" data-field-type="text">Text</div>
           <div class="toolbox-tool" data-field-type="number">Number</div>
@@ -88,7 +91,9 @@
       </div>
 
       <div v-show="selectedDocField.isSelected" class="field-editor-wrap toolbox-wrap">
-        <div class="toolbox-hdr">Field Properties</div>
+        <div class="toolbox-hdr">
+          <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
+          Field Properties</div>
         <div class="toolbox">
 
           <div class="input-wrap">
@@ -161,6 +166,7 @@
     <div v-show="mobileEditorOpen"class="mobile-app-editor toolbox-wrap"
          :class="!mobileEditorMaximized ? 'minimized' : ''" >
       <div class="toolbox-hdr">
+        <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>&nbsp;
         Mobile App Preview
         <div class="toolbox-hdr-btn-wrap">
 
@@ -1010,6 +1016,11 @@
         padding: 6px;
         width: 100%;
 
+        i.fa.fa-ellipsis-v {
+          color: rgba(255, 255, 255, 0.2);
+          margin-right: 1px;
+        }
+
         .toolbox-hdr-btn-wrap {
           position: absolute;
           right: 2px;
@@ -1146,6 +1157,10 @@
         border-color: $gray6;
         color: $font-dark;
         min-width: 324px;
+
+        i.fa.fa-ellipsis-v {
+          color: rgba(0, 0, 0, 0.2);
+        }
 
         .toolbox-hdr-btn-wrap {
           .btn {
