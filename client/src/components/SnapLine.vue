@@ -18,7 +18,7 @@
     computed: {
       classes: function () {
         let classes = 'snap-line ' + (this.snapLine.isVertical ? 'snap-line-x' : 'snap-line-y')
-        if (this.snapLine.selected) {
+        if (this.snapLine.isSelected) {
           classes += ' selected'
         }
         return classes

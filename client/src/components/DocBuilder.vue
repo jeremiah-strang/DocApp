@@ -52,10 +52,10 @@
                  :snap-line="item" :scroll-wrap="$refs.docBuilderSurface"
                  :on-line-moved="onSnapLineMoved"></snap-line>
 
-      <doc-field v-for="(item, index) in selectedPage.docFields" :doc-field="item" :key="item.uuid"
-                 :on-select="onSelectDocField" :id="'_' + item.uuid" 
+      <doc-field-component v-for="(item, index) in selectedPage.docFields" :doc-field="item"
+                 :key="item.uuid" :on-select="onSelectDocField" :id="'_' + item.uuid" 
                  v-on:delete-doc-field="onDeleteDocField(item, index)">
-      </doc-field>
+      </doc-field-component>
 
       <canvas ref="docBuilderCanvas" v-show="showEditor" class="doc-builder-img"
               height="1100" width="850"></canvas>
@@ -82,7 +82,7 @@
         </div>
       </div>
 
-      <div v-show="selectedDocField.selected" class="field-editor-wrap toolbox-wrap">
+      <div v-show="selectedDocField.isSelected" class="field-editor-wrap toolbox-wrap">
         <div class="toolbox-hdr">Field Properties</div>
         <div class="toolbox">
 
@@ -159,14 +159,14 @@
   const $ = require('jquery')
   import uuidv4 from 'uuid/v4'
   import interact from 'interact.js'
-  import numeral from 'numeral'
-  import XDate from 'xdate'
   import utils from '../utils/utils'
-  import NumberFormat from '../utils/NumberFormat'
-  import DateFormat from '../utils/DateFormat'
-  import FontOption from '../utils/FontOption'
+  import NumberFormat from '../models/NumberFormat'
+  import DateFormat from '../models/DateFormat'
+  import FontOption from '../models/FontOption'
+  import DocField from '../models/DocField'
+  import DocFieldType from '../models/DocFieldType'
   import pdfjs from 'pdfjs-dist'
-  import DocField from '@/components/DocField'
+  import DocFieldComponent from '@/components/DocField'
   import SnapLine from '@/components/SnapLine'
 
   pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
@@ -197,7 +197,7 @@
         },
         selectedDocField: {
           name: '',
-          selected: false,
+          isSelected: false,
         },
         snapLinesX: [],
         snapLinesY: [],
@@ -217,6 +217,7 @@
         DateFormat,
         NumberFormat,
         FontOption,
+        DocFieldType,
       }
     },
     computed: {
@@ -345,29 +346,17 @@
       addDocField: function (toolboxTool) {
         let toolPos = utils.getPositioning(toolboxTool, this.$refs.docBuilderSurface, this.$refs.docBuilderSurface)
         let type = toolboxTool.getAttribute('data-field-type')
-        this.sharedDocFieldProps[type].count
-        let name = type.substring(0, 1).toUpperCase() + type.substring(1, type.length) + ' Field ' +
-          (++this.sharedDocFieldProps[type].count)
-
         let sharedProps = this.sharedDocFieldProps[type]
-        let docField = {
-          name: name,
-          uuid: uuidv4(),
-          type: type,
-          // x: utils.getSnapLine(toolPos.left, this.snapLinesX, snapRangeX, this.enableSnap),
-          // y: utils.getSnapLine(toolPos.top, this.snapLinesY, snapRangeY, this.enableSnap),
-          height: toolboxTool.style.height,
-          width: sharedProps.width,
-          selected: true,
-          isRequired: true,
-          fontFamily: sharedProps.fontFamily,
-          fontSize: sharedProps.fontSize,
-          ...this.getSnapLines(toolPos.left, toolPos.top),
-        }
+        sharedProps.count++
 
-        docField.numberFormat = sharedProps.numberFormat
-        docField.dateFormat = sharedProps.dateFormat
-        docField.text = getDefaultFieldText(docField)
+        let docField = new DocField({
+          type: type,
+          height: toolboxTool.offsetHeight,
+          isSelected: true,
+          isRequired: true,
+          onSelect: this.onSelect,
+          ...this.getSnapLines(toolPos.left, toolPos.top),
+        }, sharedProps)
 
         this.onSelectDocField(docField)
         this.selectedPage.docFields.push(docField)
@@ -404,11 +393,11 @@
           })
           .on('dragstart', (event) => {
             this.snapLinesX.forEach(sn => {
-              sn.selected = false
+              sn.isSelected = false
             })
 
             this.snapLinesY.forEach(sn => {
-              sn.selected = false
+              sn.isSelected = false
             })
             if (typeof this.onSelect === 'function') {
               this.onSelect(docField)
@@ -443,7 +432,7 @@
 
         if (!snapX) {
           snapX = {
-            selected: true,
+            isSelected: true,
             uuid: uuidv4(),
             isVertical: true,
             position: left,
@@ -454,7 +443,7 @@
         if (!snapY) {
           snapY = {
             uuid: uuidv4(),
-            selected: true,
+            isSelected: true,
             isVertical: false,
             position: top,
           }
@@ -485,20 +474,20 @@
        */
       checkSnapLines: function (x, y) {
         this.snapLinesX.forEach(sn => {
-          sn.selected = false
+          sn.isSelected = false
         })
 
         this.snapLinesY.forEach(sn => {
-          sn.selected = false
+          sn.isSelected = false
         })
 
         let snapX = this.snapLinesX.find(sn => { return Math.abs(sn.position - x) <= snapRangeX })
         let snapY = this.snapLinesY.find(sn => { return Math.abs(sn.position - y) <= snapRangeY })
         if (snapX) {
-          snapX.selected = true
+          snapX.isSelected = true
         }
         if (snapY) {
-          snapY.selected = true
+          snapY.isSelected = true
         }
       },
 
@@ -525,7 +514,7 @@
        * Selected number or date format changed
        */
       onFormatChanged: function () {
-        this.selectedDocField.text = getDefaultFieldText(this.selectedDocField)
+        this.selectedDocField.updateText()
         let sharedProps = this.sharedDocFieldProps[this.selectedDocField.type]
         if (this.selectedDocField.type === 'number') {
           sharedProps.numberFormat = this.selectedDocField.numberFormat
@@ -550,27 +539,28 @@
        */
       onSelectDocField: function (docField) {
         this.snapLinesX.forEach(sn => {
-          sn.selected = false
+          sn.isSelected = false
         })
 
         this.snapLinesY.forEach(sn => {
-          sn.selected = false
+          sn.isSelected = false
         })
 
         this.selectedPage.docFields.forEach(df => {
-          df.selected = df.uuid === docField.uuid
+          df.isSelected = df.uuid === docField.uuid
         })
+
         this.selectedDocField = docField || {
           name: '',
-          selected: false,
+          isSelected: false,
         }
 
         if (this.selectedDocField.snapLineX) {
-          this.selectedDocField.snapLineX.selected = true
+          this.selectedDocField.snapLineX.isSelected = true
         }
 
         if (this.selectedDocField.snapLineY) {
-          this.selectedDocField.snapLineY.selected = true
+          this.selectedDocField.snapLineY.isSelected = true
         }
 
         this.$nextTick(() => this.$refs.selectedDocFieldName.select())
@@ -582,10 +572,10 @@
       onDeleteDocField: function (docField, index) {
         this.selectedPage.docFields.splice(index, 1)
         if (this.selectedDocField.uuid === docField.uuid) {
-          this.selectedDocField.selected = false
+          this.selectedDocField.isSelected = false
           this.selectedDocField = {
             name: '',
-            selected: false,
+            isSelected: false,
           }
         }
       },
@@ -594,118 +584,28 @@
        * Moves the selected doc field up 1 pixel
        */
       moveDocFieldUp: function () {
-        if (this.selectedDocField.y > 0) {
-          this.selectedDocField.y--
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = false
-          }
-
-          let snapLineY = this.snapLinesY.find(sn => {
-            return sn.position === this.selectedDocField.y
-          })
-
-          this.selectedDocField.snapLineY = snapLineY
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = true
-          }
-        }
+        this.selectedDocField.moveY(-1, this.snapLinesY)
       },
 
       /*
        * Moves the selected doc field down 1 pixel
        */
       moveDocFieldDown: function () {
-        if (this.selectedDocField.y < 1100) {
-          this.selectedDocField.y++
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = false
-          }
-
-          let snapLineY = this.snapLinesY.find(sn => {
-            return sn.position === this.selectedDocField.y
-          })
-
-          this.selectedDocField.snapLineY = snapLineY
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = true
-          }
-        }
+        this.selectedDocField.moveY(1, this.snapLinesY)
       },
 
       /*
        * Moves the selected doc field left 1 pixel
        */
       moveDocFieldLeft: function () {
-        if (this.selectedDocField.x > 0) {
-          this.selectedDocField.x--
-
-          if (this.selectedDocField.snapLineX) {
-            this.selectedDocField.snapLineX.selected = false
-          }
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = false
-          }
-
-          let snapLineX = this.snapLinesX.find(sn => {
-            return sn.position === this.selectedDocField.x
-          })
-
-          let snapLineY = this.snapLinesY.find(sn => {
-            return sn.position === this.selectedDocField.y
-          })
-
-          this.selectedDocField.snapLineX = snapLineX
-          this.selectedDocField.snapLineY = snapLineY
-
-          if (this.selectedDocField.snapLineX) {
-            this.selectedDocField.snapLineX.selected = true
-          }
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = true
-          }
-        }
+        this.selectedDocField.moveX(-1, this.snapLinesX)
       },
 
       /*
        * Moves the selected doc field right 1 pixel
        */
       moveDocFieldRight: function () {
-        if (this.selectedDocField.x < 850) {
-          this.selectedDocField.x++
-
-          if (this.selectedDocField.snapLineX) {
-            this.selectedDocField.snapLineX.selected = false
-          }
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = false
-          }
-
-          let snapLineX = this.snapLinesX.find(sn => {
-            return sn.position === this.selectedDocField.x
-          })
-
-          let snapLineY = this.snapLinesY.find(sn => {
-            return sn.position === this.selectedDocField.y
-          })
-
-          this.selectedDocField.snapLineX = snapLineX
-          this.selectedDocField.snapLineY = snapLineY
-
-          if (this.selectedDocField.snapLineX) {
-            this.selectedDocField.snapLineX.selected = true
-          }
-
-          if (this.selectedDocField.snapLineY) {
-            this.selectedDocField.snapLineY.selected = true
-          }
-        }
+        this.selectedDocField.moveX(1, this.snapLinesX)
       },
     },
 
@@ -745,11 +645,11 @@
         })
         .on('dragstart', (event) => {
           this.snapLinesX.forEach(sn => {
-            sn.selected = false
+            sn.isSelected = false
           })
 
           this.snapLinesY.forEach(sn => {
-            sn.selected = false
+            sn.isSelected = false
           })
 
           let target = event.target
@@ -765,7 +665,7 @@
             draggingTool.dragOrigin = target
 
             if (fieldType !== 'check' && fieldType !== 'checkx' && fieldType !== 'checksq') {
-              draggingTool.innerHTML = getDefaultFieldText({
+              draggingTool.innerHTML = utils.getDefaultDocFieldText({
                 type: fieldType,
                 ...getDefaultSharedProps()
               })
@@ -866,7 +766,7 @@
       utils.unsetInteractable(this.toolboxInteractable)
     },
     components: {
-      DocField,
+      DocFieldComponent,
       SnapLine,
     }
   }
@@ -896,31 +796,6 @@
       numberFormat: NumberFormat.none,
       dateFormat: DateFormat.MMddyyyySlash,
     }
-  }
-
-  /**
-   *
-   */
-  const getDefaultFieldText = (docField) => {
-    switch (docField.type) {
-      case 'text':
-        return 'Example text'
-      case 'number':
-        let num = 12345.67
-        return docField.numberFormat ? numeral(num).format(docField.numberFormat) : num
-      case 'date':
-        let dateStr = (new XDate(2017, 0, 1)).toString(docField.dateFormat)
-        return dateStr
-      case 'phone':
-        return '555-555-1234'
-      case 'drawing':
-        return 'Signature/Drawing'
-      case 'check':
-      case 'checkx':
-      case 'checksq':
-        return ' '
-    }
-    return ''
   }
 </script>
 

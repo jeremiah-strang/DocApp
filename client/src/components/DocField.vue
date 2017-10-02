@@ -1,5 +1,5 @@
 <template>
-  <div ref="docFieldEl" :style="style" :class="docField.selected ? 'selected' : ''"
+  <div ref="docFieldEl" :style="style" :class="docField.isSelected ? 'selected' : ''"
        v-on:click="onClick" class="doc-field" :data-field-type="docField.type"
        :title="title">
     <i v-if="docField.type === 'check'" class="fa fa-check"></i>
