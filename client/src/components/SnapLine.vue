@@ -27,7 +27,7 @@
         return (this.snapLine.isVertical ? 'left:' : 'top:') + this.snapLine.position + 'px;'
       },
       title: function () {
-        return `${this.snapLine.position}`
+        return `${this.snapLine.position / 100}"`
       },
     },
     mounted: function () {

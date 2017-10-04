@@ -30,7 +30,7 @@
           `${this.docField.fontFamily};font-size:${this.docField.fontSize}pt;`
       },
       title: function () {
-        return `${this.docField.name} (${this.docField.x}, ${this.docField.y})`
+        return `${this.docField.name} (${this.docField.x / 100}", ${this.docField.y / 100}")`
       },
     },
     methods: {
