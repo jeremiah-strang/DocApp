@@ -8,7 +8,7 @@ import {
   View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
-export default class AppNav extends React.Component {
+export default class DocTemplateItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -24,7 +24,7 @@ export default class AppNav extends React.Component {
       <View style={styles.docTemplateItem}>
         <Ionicons style={styles.itemIcon} name='md-document' size={40} color='#028bdd' />
         <View style={styles.flexColumn}>
-          <TouchableHighlight>
+          <TouchableHighlight onPress={this.props.onOpenDocTemplate}>
             <Text numberOfLines={1} style={styles.itemName}>{this.props.docTemplate.name}</Text>
           </TouchableHighlight>
           <View style={styles.flexRow}>

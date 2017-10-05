@@ -19,7 +19,7 @@ export default class Docs extends React.Component {
 
 const styles = StyleSheet.create({
   headerText: {
-    color: '#028bdd',
+    color: '#333',
     fontSize: 22,
     marginBottom: 8,
     paddingRight: 10,

@@ -23,6 +23,7 @@ export default class AppNav extends React.Component {
   render() {
     let currentView
     let homeStyles = [styles.navBarButton]
+    let docTemplateStyles = [styles.navBarButton]
     let docsStyles = [styles.navBarButton]
     let settingsStyles = [styles.navBarButton]
     switch (this.state.currentView) {
@@ -49,7 +50,8 @@ export default class AppNav extends React.Component {
           {currentView}
         </View>
         <View style={styles.navBar}>
-          <TouchableHighlight style={homeStyles} onPress={() => {this.setState({ currentView: 'Home' })}}>
+          <TouchableHighlight style={homeStyles}
+                              onPress={() => {this.setState({ currentView: 'Home' })}}>
             <Ionicons name='md-home' size={36} color='#028bdd' />
           </TouchableHighlight>
           <TouchableHighlight style={docsStyles} onPress={() => { this.setState({ currentView: 'Docs' })}}>

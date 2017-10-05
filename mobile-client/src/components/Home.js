@@ -8,6 +8,7 @@ import {
   ScrollView,
   View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import DocTemplate from './DocTemplate'
 import DocTemplateItem from './DocTemplateItem'
 
 export default class Home extends React.Component {
@@ -15,6 +16,7 @@ export default class Home extends React.Component {
     super(props)
     this.state = {
       searchText: '',
+      docTemplate: null,
     }
   }
 
@@ -66,21 +68,26 @@ export default class Home extends React.Component {
 
     let docTemplateItems = docTemplateData.map(docTemplate => {
       return <DocTemplateItem docTemplate={docTemplate}
+                              onOpenDocTemplate={() => this.setState({docTemplate})}
                               key={docTemplate.id}></DocTemplateItem>
      })
 
-    return (
-      <ScrollView style={styles.container}>
-        <Text style={styles.headerText}>Available Document Templates</Text>
-        <View style={styles.searchWrap}>
-          <TextInput style={styles.textInput}
-                     onChangeText={(searchText) => this.setState({searchText})}
-                     value={this.state.searchText}
-                     placeholder={'Search'} />
-        </View>
-        {docTemplateItems}
-      </ScrollView>
-    )
+    if (!this.state.docTemplate) {
+      return (
+        <ScrollView style={styles.container}>
+          <Text style={styles.headerText}>Available Document Templates</Text>
+          <View style={styles.searchWrap}>
+            <TextInput style={styles.textInput}
+                       onChangeText={(searchText) => this.setState({searchText})}
+                       value={this.state.searchText}
+                       placeholder={'Search'} />
+          </View>
+          {docTemplateItems}
+        </ScrollView>
+      )
+    } else {
+      return <DocTemplate docTemplate={this.state.docTemplate}></DocTemplate>
+    }
   }
 }
 
