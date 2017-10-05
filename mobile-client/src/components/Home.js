@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   searchWrap: {
-    flex: 1,
     flexDirection: 'row',
     paddingRight: 15,
     paddingLeft: 15,
