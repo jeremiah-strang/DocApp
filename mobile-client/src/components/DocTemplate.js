@@ -8,6 +8,9 @@ import {
   ScrollView,
   View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import DocFieldText from './DocFieldText'
+import DocFieldNumber from './DocFieldNumber'
+import DocFieldPhone from './DocFieldPhone'
 
 export default class DocTemplate extends React.Component {
   constructor(props) {
@@ -21,7 +24,15 @@ export default class DocTemplate extends React.Component {
     let docFieldItems
     if (docTemplate && Array.isArray(docTemplate.docFields)) {
       docFieldItems = docTemplate.docFields.map(df => {
-        return <Text style={{ color: '#333' }} key={df.uuid}>{df.name}</Text>
+        switch (df.type) {
+          case 'number':
+            return <DocFieldNumber key={df.uuid} docField={df}></DocFieldNumber>
+          case 'phone':
+            return <DocFieldPhone key={df.uuid} docField={df}></DocFieldPhone>
+          case 'text':
+          default:
+            return <DocFieldText key={df.uuid} docField={df}></DocFieldText>
+        }
       })
     } else {
       docFieldItems = []
