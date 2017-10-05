@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    paddingTop: 30,
+    paddingTop: 10,
   },
   headerText: {
     color: '#028bdd',
