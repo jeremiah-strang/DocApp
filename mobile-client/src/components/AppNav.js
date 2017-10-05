@@ -43,6 +43,8 @@ export default class AppNav extends React.Component {
 
     return (
       <View style={styles.container}>
+        <View style={{ width: '100%', height: 24, backgroundColor: '#fff' }}></View>
+        <View style={{ width: '100%', height: 5, backgroundColor: '#028bdd' }}></View>
         <View style={styles.currentView}>
           {currentView}
         </View>
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e1e1e1',
     flex: 1,
     width: '100%',
-    paddingTop: 30,
+    paddingTop: 15,
   },
   navBar: {
     flexDirection: 'row',
