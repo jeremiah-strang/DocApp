@@ -19,15 +19,55 @@ export default class Home extends React.Component {
   }
 
   render() {
-    let docTemplateItems = []
+    let docTemplateData = [
+      {
+        id: 30,
+        name: 'Interior painting estimate form 2',
+        createdBy: 'jstrang', 
+        createdOn: new Date(2017, 8, 20),
+      },
+      {
+        id: 29,
+        name: 'Interior painting estimate form 1',
+        createdBy: 'bsmith', 
+        createdOn: new Date(2017, 8, 18),
+      },
+      {
+        id: 28,
+        name: 'Exterior & interior painting estimate form',
+        createdBy: 'bsmith', 
+        createdOn: new Date(2017, 8, 4),
+      },
+      {
+        id: 27,
+        name: 'Customer invoice (basic)',
+        createdBy: 'jstrang', 
+        createdOn: new Date(2017, 8, 4),
+      },
+      {
+        id: 26,
+        name: 'Customer invoice (for jobs in Colorado)',
+        createdBy: 'bsmith', 
+        createdOn: new Date(2017, 8, 3),
+      },
+      {
+        id: 25,
+        name: 'Liability contract 2',
+        createdBy: 'gjones', 
+        createdOn: new Date(2017, 8, 3),
+      },
+      {
+        id: 24,
+        name: 'Liability contract 1',
+        createdBy: 'gjones', 
+        createdOn: new Date(2017, 8, 3),
+      },
+    ]
 
-    for (let i = 1; i <= 20; i++) {
-      docTemplateItems.push(
-        <DocTemplateItem docTemplateName={'Doc Template ' + i}
-                         createdBy={'jstrang'}
-                         key={i}></DocTemplateItem>
-      )
-    }
+    let docTemplateItems = docTemplateData.map(docTemplate => {
+      return <DocTemplateItem docTemplate={docTemplate}
+                              key={docTemplate.id}></DocTemplateItem>
+     })
 
     return (
       <ScrollView style={styles.container}>
@@ -48,7 +88,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    paddingTop: 10,
   },
   headerText: {
     color: '#028bdd',

@@ -11,17 +11,19 @@ export default class Docs extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-        <Text style={styles.logoText}>Docs</Text>
+        <Text style={styles.headerText}>Docs</Text>
       </ScrollView>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  logoText: {
+  headerText: {
     color: '#028bdd',
-    fontSize: 60,
-    marginBottom: 40,
+    fontSize: 22,
+    marginBottom: 8,
+    paddingRight: 10,
+    paddingLeft: 10,
   },
   container: {
     flexDirection: 'column',

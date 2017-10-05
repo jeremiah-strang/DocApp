@@ -16,16 +16,23 @@ export default class AppNav extends React.Component {
   }
 
   render() {
+    let MM = this.props.docTemplate.createdOn.getMonth() + 1
+    let dd = this.props.docTemplate.createdOn.getDate()
+    let yyyy = this.props.docTemplate.createdOn.getFullYear()
+    let createdOnText = '' + MM + '/' + dd + '/' + yyyy
     return (
       <View style={styles.docTemplateItem}>
         <Ionicons style={styles.itemIcon} name='md-document' size={40} color='#028bdd' />
-        <View style={styles.vertTextWrap}>
+        <View style={styles.flexColumn}>
           <TouchableHighlight>
-            <Text style={styles.itemName}>{this.props.docTemplateName}</Text>
+            <Text numberOfLines={1} style={styles.itemName}>{this.props.docTemplate.name}</Text>
           </TouchableHighlight>
-          <TouchableHighlight>
-            <Text style={styles.itemCreatedBy}>{this.props.createdBy}</Text>
-          </TouchableHighlight>
+          <View style={styles.flexRow}>
+            <Text style={{ color: '#aaa' }}>Created by&nbsp;</Text>
+            <Text style={styles.itemCreatedBy}>{this.props.docTemplate.createdBy}</Text>
+            <Text style={{ color: '#aaa' }}>&nbsp;on&nbsp;</Text>
+            <Text style={{ color: '#aaa' }}>{createdOnText}</Text>
+          </View>
         </View>
       </View>
     )
@@ -43,7 +50,10 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
   },
-  vertTextWrap: {
+  flexRow: {
+    flexDirection: 'row',
+  },
+  flexColumn: {
     flexDirection: 'column',
   },
   itemName: {
@@ -51,12 +61,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 4,
     flex: 1,
+    paddingRight: 10,
   },
   itemCreatedBy: {
     color: '#028bdd',
-    fontSize: 15,
-    flex: 1,
-    marginBottom: 4,
   },
   itemIcon: {
     alignItems: 'center',
