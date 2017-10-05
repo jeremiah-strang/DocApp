@@ -11,62 +11,28 @@ import { Ionicons } from '@expo/vector-icons'
 import DocTemplate from './DocTemplate'
 import DocTemplateItem from './DocTemplateItem'
 
+import api from '../data/api'
+
 export default class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       searchText: '',
       docTemplate: null,
+      docTemplates: [],
     }
+
+  }
+
+  componentDidMount() {
+    return api.getDocTemplates().then(docTemplates => {
+      this.setState({ docTemplates })
+      console.log(JSON.stringify(this.state.docTemplates, null, '  '))
+    })
   }
 
   render() {
-    let docTemplateData = [
-      {
-        id: 30,
-        name: 'Interior painting estimate form 2',
-        createdBy: 'jstrang', 
-        createdOn: new Date(2017, 8, 20),
-      },
-      {
-        id: 29,
-        name: 'Interior painting estimate form 1',
-        createdBy: 'bsmith', 
-        createdOn: new Date(2017, 8, 18),
-      },
-      {
-        id: 28,
-        name: 'Exterior & interior painting estimate form',
-        createdBy: 'bsmith', 
-        createdOn: new Date(2017, 8, 4),
-      },
-      {
-        id: 27,
-        name: 'Customer invoice (basic)',
-        createdBy: 'jstrang', 
-        createdOn: new Date(2017, 8, 4),
-      },
-      {
-        id: 26,
-        name: 'Customer invoice (for jobs in Colorado)',
-        createdBy: 'bsmith', 
-        createdOn: new Date(2017, 8, 3),
-      },
-      {
-        id: 25,
-        name: 'Liability contract 2',
-        createdBy: 'gjones', 
-        createdOn: new Date(2017, 8, 3),
-      },
-      {
-        id: 24,
-        name: 'Liability contract 1',
-        createdBy: 'gjones', 
-        createdOn: new Date(2017, 8, 3),
-      },
-    ]
-
-    let docTemplateItems = docTemplateData.map(docTemplate => {
+    let docTemplateItems = this.state.docTemplates.map(docTemplate => {
       return <DocTemplateItem docTemplate={docTemplate}
                               onOpenDocTemplate={() => this.setState({docTemplate})}
                               key={docTemplate.id}></DocTemplateItem>
