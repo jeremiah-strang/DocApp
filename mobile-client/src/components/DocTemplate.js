@@ -17,9 +17,19 @@ export default class DocTemplate extends React.Component {
   }
 
   render() {
+    let docTemplate = this.props.docTemplate
+    let docFieldItems
+    if (docTemplate && Array.isArray(docTemplate.docFields)) {
+      docFieldItems = docTemplate.docFields.map(df => {
+        return <Text style={{ color: '#333' }} key={df.uuid}>{df.name}</Text>
+      })
+    } else {
+      docFieldItems = []
+    }
     return (
       <ScrollView style={styles.docTemplateItem}>
         <Text style={styles.headerText}>{this.props.docTemplate.name}</Text>
+        {docFieldItems}
       </ScrollView>
     )
   }

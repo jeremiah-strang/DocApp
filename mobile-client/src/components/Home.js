@@ -21,20 +21,24 @@ export default class Home extends React.Component {
       docTemplate: null,
       docTemplates: [],
     }
-
   }
 
   componentDidMount() {
-    return api.getDocTemplates().then(docTemplates => {
-      this.setState({ docTemplates })
-      console.log(JSON.stringify(this.state.docTemplates, null, '  '))
-    })
+    api.getDocTemplates().then(docTemplates => this.setState({ docTemplates }))
+  }
+
+  loadDocTemplate(docTemplate) {
+    if (docTemplate) {
+      api.getDocTemplate(docTemplate.id).then(docTemplate => this.setState({ docTemplate }))
+    }
   }
 
   render() {
     let docTemplateItems = this.state.docTemplates.map(docTemplate => {
       return <DocTemplateItem docTemplate={docTemplate}
-                              onOpenDocTemplate={() => this.setState({docTemplate})}
+                              onOpenDocTemplate={() => {
+                                this.loadDocTemplate(docTemplate)
+                              }}
                               key={docTemplate.id}></DocTemplateItem>
      })
 
