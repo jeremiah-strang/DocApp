@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableHighlight,
   View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 
 import Colors from '../style/Colors'
 
@@ -24,16 +24,16 @@ export default class DocTemplateItem extends React.Component {
     let createdOnText = '' + MM + '/' + dd + '/' + yyyy
     return (
       <View style={styles.docTemplateItem}>
-        <Ionicons style={styles.itemIcon} name='md-document' size={40} color='#028bdd' />
+        <FontAwesome style={styles.itemIcon} name='file-pdf-o' size={36} color={Colors.Theme1} />
         <View style={styles.flexColumn}>
           <TouchableHighlight onPress={this.props.onOpenDocTemplate}>
             <Text numberOfLines={1} style={styles.itemName}>{this.props.docTemplate.name}</Text>
           </TouchableHighlight>
           <View style={styles.flexRow}>
-            <Text style={{ color: '#aaa' }}>Created by&nbsp;</Text>
+            <Text style={{ color: Colors.Gray7 }}>Created by&nbsp;</Text>
             <Text style={styles.itemCreatedBy}>{this.props.docTemplate.createdBy}</Text>
-            <Text style={{ color: '#aaa' }}>&nbsp;on&nbsp;</Text>
-            <Text style={{ color: '#aaa' }}>{createdOnText}</Text>
+            <Text style={{ color: Colors.Gray7 }}>&nbsp;on&nbsp;</Text>
+            <Text style={{ color: Colors.Gray7 }}>{createdOnText}</Text>
           </View>
         </View>
       </View>

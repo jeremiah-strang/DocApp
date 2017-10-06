@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   ScrollView,
   View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+
 import DocTemplate from '../components/DocTemplate'
 import DocTemplateItem from '../components/DocTemplateItem'
 

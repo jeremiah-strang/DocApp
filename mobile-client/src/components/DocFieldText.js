@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableHighlight,
   View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 
 import Colors from '../style/Colors'
 

@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableHighlight,
   View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, FontAwesome } from '@expo/vector-icons'
 
 import Home from './Home'
 import Docs from './Docs'
@@ -57,10 +57,10 @@ export default class AppNav extends React.Component {
             <Ionicons name='md-home' size={36} color={Colors.Theme1} />
           </TouchableHighlight>
           <TouchableHighlight style={docsStyles} onPress={() => { this.setState({ currentView: 'Docs' })}}>
-            <Ionicons name='md-folder' size={36} color={Colors.Theme1} />
+            <FontAwesome name='files-o' size={32} color={Colors.Theme1} />
           </TouchableHighlight>
           <TouchableHighlight style={settingsStyles} onPress={() => { this.setState({ currentView: 'Settings' })}}>
-            <Ionicons name='md-settings' size={36} color={Colors.Theme1} />
+            <FontAwesome name='cog' size={36} color={Colors.Theme1} />
           </TouchableHighlight>
         </View>
       </View>

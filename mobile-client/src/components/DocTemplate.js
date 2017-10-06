@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
   ScrollView,
   View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+
 import DocFieldText from './DocFieldText'
 import DocFieldNumber from './DocFieldNumber'
 import DocFieldPhone from './DocFieldPhone'
