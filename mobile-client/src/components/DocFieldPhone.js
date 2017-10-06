@@ -14,6 +14,7 @@ export default class DocFieldPhone extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      value: this.props.docField.defaultValue,
     }
   }
 
@@ -23,7 +24,8 @@ export default class DocFieldPhone extends React.Component {
         <Text style={styles.docFieldName}>{this.props.docField.name}</Text>
         <TextInput style={styles.textInput}
                    keyboardType={'phone-pad'}
-                   value={this.props.docField.defaultValue} />
+                   onChangeText={(value) => this.setState({value})}
+                   value={this.state.value} />
       </View>
     )
   }

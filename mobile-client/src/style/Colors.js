@@ -1,4 +1,4 @@
-exports.COLORS = Object.freeze({
+export default Object.freeze({
   Theme1: '#028bdd',
   Theme2: '#029bf6',
   Theme3: '#15a6fd',
