@@ -11,6 +11,7 @@ import {
 import DocFieldText from './DocFieldText'
 import DocFieldNumber from './DocFieldNumber'
 import DocFieldPhone from './DocFieldPhone'
+import DocFieldDate from './DocFieldDate'
 
 import Colors from '../style/Colors'
 
@@ -31,6 +32,8 @@ export default class DocTemplate extends React.Component {
             return <DocFieldNumber key={df.uuid} docField={df}></DocFieldNumber>
           case 'phone':
             return <DocFieldPhone key={df.uuid} docField={df}></DocFieldPhone>
+          case 'date':
+            return <DocFieldDate key={df.uuid} docField={df}></DocFieldDate>
           case 'text':
           default:
             return <DocFieldText key={df.uuid} docField={df}></DocFieldText>
