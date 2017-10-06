@@ -8,6 +8,8 @@ import {
 } from 'react-native'
 import CheckBox from 'react-native-check-box'
 
+import Colors from '../style/Colors'
+
 export default class Login extends React.Component {
   constructor(props) {
     super(props)
@@ -49,7 +51,7 @@ export default class Login extends React.Component {
         <View style={styles.buttonContainer}>
           <Button onPress={this.signIn.bind(this)}
                   title='Sign In'
-                  color='#028bdd' />
+                  color={Colors.Theme1} />
         </View>
       </View>
     )
@@ -59,29 +61,29 @@ export default class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: '#4d4d4d',
+    backgroundColor: Colors.Dark3,
     flex: 1,
     justifyContent: 'center',
     padding: 20,
   },
   logoText: {
-    color: '#028bdd',
+    color: Colors.Theme1,
     fontSize: 60,
     marginBottom: 40,
   },
   textInput: {
     backgroundColor: '#fff',
-    borderColor: '#333',
+    borderColor: Colors.Dark1,
     borderRadius: 8,
     borderWidth: 1,
-    color: '#333',
+    color: Colors.Dark1,
     fontSize: 15,
     marginBottom: 12,
     padding: 12,
     width: '100%',
   },
   checkBox: {
-    backgroundColor: '#4d4d4d',
+    backgroundColor: Colors.Dark3,
     height: 20,
     width: 20,
   },
@@ -92,13 +94,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    backgroundColor: '#333',
+    backgroundColor: Colors.Dark1,
     borderRadius: 8,
     borderBottomLeftRadius: 8,
     borderTopLeftRadius: 8,
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
-    borderColor: '#4d4d4d',
+    borderColor: Colors.Dark3,
     borderWidth: 1,
   },
 })

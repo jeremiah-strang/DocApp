@@ -8,6 +8,8 @@ import {
   View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
+import Colors from '../style/Colors'
+
 export default class DocFieldText extends React.Component {
   constructor(props) {
     super(props)
@@ -31,23 +33,23 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 8,
     backgroundColor: '#fff',
-    borderColor: '#a6a6a6',
+    borderColor: Colors.Gray7,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     padding: 10,
     flexDirection: 'column',
   },
   docFieldName: {
-    color: '#333',
+    color: Colors.Dark1,
     marginBottom: 8,
   },
   textInput: {
     width: '100%',
     backgroundColor: '#fff',
-    borderColor: '#333',
+    borderColor: Colors.Dark1,
     borderRadius: 8,
     borderWidth: 1,
-    color: '#333',
+    color: Colors.Dark1,
     fontSize: 15,
     height: 42,
     padding: 4,

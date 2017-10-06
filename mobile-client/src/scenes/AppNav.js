@@ -12,6 +12,8 @@ import Home from './Home'
 import Docs from './Docs'
 import Settings from './Settings'
 
+import Colors from '../style/Colors'
+
 export default class AppNav extends React.Component {
   constructor(props) {
     super(props)
@@ -45,20 +47,20 @@ export default class AppNav extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ width: '100%', height: 24, backgroundColor: '#fff' }}></View>
-        <View style={{ width: '100%', height: 5, backgroundColor: '#028bdd' }}></View>
+        <View style={{ width: '100%', height: 5, backgroundColor: {Colors.Theme1} }}></View>
         <View style={styles.currentView}>
           {currentView}
         </View>
         <View style={styles.navBar}>
           <TouchableHighlight style={homeStyles}
                               onPress={() => {this.setState({ currentView: 'Home' })}}>
-            <Ionicons name='md-home' size={36} color='#028bdd' />
+            <Ionicons name='md-home' size={36} color={Colors.Theme1} />
           </TouchableHighlight>
           <TouchableHighlight style={docsStyles} onPress={() => { this.setState({ currentView: 'Docs' })}}>
-            <Ionicons name='md-folder' size={36} color='#028bdd' />
+            <Ionicons name='md-folder' size={36} color={Colors.Theme1} />
           </TouchableHighlight>
           <TouchableHighlight style={settingsStyles} onPress={() => { this.setState({ currentView: 'Settings' })}}>
-            <Ionicons name='md-settings' size={36} color='#028bdd' />
+            <Ionicons name='md-settings' size={36} color={Colors.Theme1} />
           </TouchableHighlight>
         </View>
       </View>
@@ -68,7 +70,7 @@ export default class AppNav extends React.Component {
 
 const styles = StyleSheet.create({
   logoText: {
-    color: '#028bdd',
+    color: Colors.Theme1,
     fontSize: 60,
     marginBottom: 40,
   },
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   currentView: {
-    backgroundColor: '#e1e1e1',
+    backgroundColor: Colors.Gray3,
     flex: 1,
     width: '100%',
     paddingTop: 15,
@@ -87,12 +89,12 @@ const styles = StyleSheet.create({
   },
   navBarButton: {
     alignItems: 'center',
-    backgroundColor: '#333',
+    backgroundColor: Colors.Dark1,
     flex: 1,
     height: 60,
     justifyContent: 'center',
   },
   activeNavBarButton: {
-    backgroundColor: '#4d4d4d',
+    backgroundColor: Colors.Dark3,
   },
 })

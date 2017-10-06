@@ -12,6 +12,7 @@ import DocTemplate from '../components/DocTemplate'
 import DocTemplateItem from '../components/DocTemplateItem'
 
 import api from '../data/api'
+import Colors from '../style/Colors'
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   headerText: {
-    color: '#333',
+    color: Colors.Dark1,
     fontSize: 22,
     marginBottom: 8,
     paddingRight: 10,
@@ -80,10 +81,10 @@ const styles = StyleSheet.create({
   },
   textInput: {
     backgroundColor: '#fff',
-    borderColor: '#333',
+    borderColor: Colors.Dark1,
     borderRadius: 8,
     borderWidth: 1,
-    color: '#333',
+    color: Colors.Dark1,
     flex: 1,
     fontSize: 15,
     height: 42,
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     alignItems: 'center',
-    backgroundColor: '#4d4d4d',
+    backgroundColor: Colors.Dark3,
     borderRadius: 8,
     height: 42,
     justifyContent: 'center',
@@ -103,13 +104,13 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 8,
     backgroundColor: '#fff',
-    borderColor: '#a6a6a6',
+    borderColor: Colors.Dark10,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     padding: 15,
   },
   docTemplateItemText: {
-    color: '#028bdd',
+    color: Colors.Theme1,
     fontSize: 22,
     marginBottom: 8,
   },

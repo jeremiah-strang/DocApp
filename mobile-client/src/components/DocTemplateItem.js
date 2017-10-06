@@ -8,6 +8,8 @@ import {
   View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
+import Colors from '../style/Colors'
+
 export default class DocTemplateItem extends React.Component {
   constructor(props) {
     super(props)
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 8,
     backgroundColor: '#fff',
-    borderColor: '#a6a6a6',
+    borderColor: Colors.Gray7,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     padding: 10,
@@ -57,14 +59,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   itemName: {
-    color: '#028bdd',
+    color: Colors.Theme1,
     fontSize: 22,
     marginBottom: 4,
     flex: 1,
     paddingRight: 10,
   },
   itemCreatedBy: {
-    color: '#028bdd',
+    color: Colors.Theme1,
   },
   itemIcon: {
     alignItems: 'center',

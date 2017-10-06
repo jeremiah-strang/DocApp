@@ -12,6 +12,8 @@ import DocFieldText from './DocFieldText'
 import DocFieldNumber from './DocFieldNumber'
 import DocFieldPhone from './DocFieldPhone'
 
+import Colors from '../style/Colors'
+
 export default class DocTemplate extends React.Component {
   constructor(props) {
     super(props)
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   headerText: {
-    color: '#333',
+    color: Colors.Dark1,
     fontSize: 22,
     marginBottom: 8,
     paddingRight: 10,
