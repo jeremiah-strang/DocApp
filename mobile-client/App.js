@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native'
 import CheckBox from 'react-native-check-box'
-import Login from './src/components/Login'
-import AppNav from './src/components/AppNav'
+import Login from './src/scenes/Login'
+import AppNav from './src/scenes/AppNav'
 
 export default class App extends React.Component {
   constructor(props) {

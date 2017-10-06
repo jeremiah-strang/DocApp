@@ -442,6 +442,10 @@
             this.sharedDocFieldProps[type].height = docField.height
             this.sharedDocFieldProps[type].width = docField.width
           })
+
+        // console.log(JSON.stringify(this.allDocFields.map(df => {
+        //   return df.getCleanedJson()
+        // }), null, '  '))
       },
 
       /*

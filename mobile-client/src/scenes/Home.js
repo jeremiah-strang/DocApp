@@ -8,8 +8,8 @@ import {
   ScrollView,
   View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import DocTemplate from './DocTemplate'
-import DocTemplateItem from './DocTemplateItem'
+import DocTemplate from '../components/DocTemplate'
+import DocTemplateItem from '../components/DocTemplateItem'
 
 import api from '../data/api'
 

@@ -44,6 +44,26 @@ export default class {
   /**
    *
    */
+  getCleanedJson () {
+    return {
+      uuid: this.uuid,
+      name: this.name,
+      type: this.type,
+      x: this.x,
+      y: this.y,
+      height: this.height,
+      isRequired: this.isRequired,
+      fontSize: this.fontSize,
+      fontFamily: this.fontFamily,
+      numberFormat: this.numberFormat,
+      dateFormat: this.dateFormat,
+      width: this.width,
+    }
+  }
+
+  /**
+   *
+   */
   updateText () {
     switch (this.type) {
       case DocFieldType.text:
