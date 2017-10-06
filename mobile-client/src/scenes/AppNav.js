@@ -47,7 +47,7 @@ export default class AppNav extends React.Component {
     return (
       <View style={styles.container}>
         <View style={{ width: '100%', height: 24, backgroundColor: '#fff' }}></View>
-        <View style={{ width: '100%', height: 5, backgroundColor: {Colors.Theme1} }}></View>
+        <View style={{ width: '100%', height: 5, backgroundColor: Colors.Theme1 }}></View>
         <View style={styles.currentView}>
           {currentView}
         </View>
