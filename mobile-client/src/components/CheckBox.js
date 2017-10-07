@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableHighlight,
+  TouchableWithoutFeedback,
   View } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -35,20 +35,30 @@ export default class CheckBox extends React.Component {
 
     let iconWrap
     if (this.props.isChecked === true) {
-      iconWrap = <View style={styles.checkBoxIconWrap}>
-                   <FontAwesome style={styles.checkBoxIcon} name='check' size={20} />
-                 </View>
+      iconWrap = (
+        <TouchableWithoutFeedback onPress={this.onToggle.bind(this)}>
+          <View style={styles.checkBoxIconWrap}>
+            <FontAwesome style={styles.checkBoxIcon} name='check' size={20} />
+          </View>
+        </TouchableWithoutFeedback>
+      )
     } else {
-      iconWrap = <View style={styles.checkBoxIconWrap}></View>
+      iconWrap =  (
+        <TouchableWithoutFeedback onPress={this.onToggle.bind(this)}>
+          <View style={styles.checkBoxIconWrap}></View>
+        </TouchableWithoutFeedback>
+      )
     }
 
     return (
       <View style={this.props.style}>
         <View style={styles.checkBoxWrap}>
           {iconWrap}
-          <TouchableHighlight onPress={this.onToggle.bind(this)}>
+          <TouchableWithoutFeedback onPress={this.onToggle.bind(this)}>
+            <View>
               <Text style={labelStyle}>{this.props.label}</Text>
-          </TouchableHighlight>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </View>
     )
