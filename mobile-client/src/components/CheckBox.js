@@ -28,22 +28,26 @@ export default class CheckBox extends React.Component {
     } else {
       labelStyle = styles.checkBoxLabel
     }
-    // if (this.state.isChecked === true) {
-    //   return <View style={styles.checkBoxWrap}>
 
-    //          </View>
-    // } else {
-    //   return <View style={styles.checkBoxWrap}>
-              
-    //          </View>
-    // }
+    let iconWrap
+    if (this.state.isChecked === true) {
+      iconWrap = <View style={styles.checkBoxIconWrap}>
+                   <FontAwesome style={styles.checkBoxIcon} name='check' size={20} />
+                 </View>
+    } else {
+      iconWrap = <View style={styles.checkBoxIconWrap}></View>
+    }
+
     return (
       <View style={this.props.style}>
         <View style={styles.checkBoxWrap}>
-          <View style={styles.checkBoxIconWrap}>
-            <FontAwesome style={styles.checkBoxIcon} name='check' size={20} />
-          </View>
-          <Text style={labelStyle}>{this.props.label}</Text>
+          {iconWrap}
+          <TouchableHighlight onPress={() => {
+              console.log('highlight clicked')
+              this.props.onPress()
+            }}>
+              <Text style={labelStyle}>{this.props.label}</Text>
+          </TouchableHighlight>
         </View>
       </View>
     )
@@ -65,6 +69,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     width: 30,
+    height: 30,
   },
   checkBoxLabel: {
     alignItems: 'center',

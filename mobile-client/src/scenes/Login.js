@@ -45,7 +45,8 @@ export default class Login extends React.Component {
                   isChecked={this.state.keepLoggedIn}
                   label='Keep me signed in'
                   labelColor='#fff'
-                  onClick={() => this.setState(previousState => {
+                  onPress={() => this.setState(previousState => {
+                    console.log('setting state from: ' + previousState.keepLoggedIn)
                     return { keepLoggedIn: !previousState.keepLoggedIn };
                   })} />
         <View style={styles.buttonContainer}>
