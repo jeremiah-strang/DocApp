@@ -6,7 +6,8 @@ import {
   TextInput,
   View,
 } from 'react-native'
-import CheckBox from 'react-native-check-box'
+// import CheckBox from 'react-native-check-box'
+import CheckBox from '../components/CheckBox'
 
 import Colors from '../style/Colors'
 
@@ -42,12 +43,11 @@ export default class Login extends React.Component {
                    placeholder={'Password'} />
         <CheckBox style={styles.checkBox}
                   isChecked={this.state.keepLoggedIn}
+                  label='Keep me signed in'
+                  labelColor='#fff'
                   onClick={() => this.setState(previousState => {
                     return { keepLoggedIn: !previousState.keepLoggedIn };
                   })} />
-        <Text style={styles.checkBoxText}>
-            &nbsp;&nbsp;Keep me signed in
-          </Text>
         <View style={styles.buttonContainer}>
           <Button onPress={this.signIn.bind(this)}
                   title='Sign In'
@@ -84,12 +84,7 @@ const styles = StyleSheet.create({
   },
   checkBox: {
     backgroundColor: Colors.Dark3,
-    height: 20,
-    width: 20,
-  },
-  checkBoxText: {
-    color: '#fff',
-    fontSize: 15,
+    width: '100%',
     marginBottom: 12,
   },
   buttonContainer: {
