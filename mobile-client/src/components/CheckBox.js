@@ -34,7 +34,6 @@ export default class CheckBox extends React.Component {
     }
 
     let iconWrap
-    console.log('this.props.isChecked: ' + this.props.isChecked)
     if (this.props.isChecked === true) {
       iconWrap = <View style={styles.checkBoxIconWrap}>
                    <FontAwesome style={styles.checkBoxIcon} name='check' size={20} />
