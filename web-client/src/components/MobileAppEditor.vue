@@ -91,7 +91,7 @@
 <style lang="scss" scoped>
   @import '../style/_shared.scss';
 
-  .mobile-app-editor.toolbox-wrap {
+  .mobile-app-editor {
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
     background-color: #fff;
     background-color: $gray3;
