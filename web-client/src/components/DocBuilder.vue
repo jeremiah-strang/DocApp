@@ -89,78 +89,12 @@
           <h4 class="float-left">&nbsp;Checkbox</h4>
         </div>
       </div>
-
-      <div v-show="selectedDocField.isSelected" class="field-editor-wrap toolbox-wrap">
-        <div class="toolbox-hdr">
-          <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
-          Field Properties</div>
-        <div class="toolbox">
-
-          <div class="input-wrap">
-            <h4>Field Name</h4>
-            <input v-model="selectedDocField.name" v-on:focus="$event.target.select()" type="text"
-                   ref="selectedDocFieldName">
-          </div>
-
-          <div class="input-wrap">
-            <div class="checkbox-wrap">
-              <input v-model="selectedDocField.isRequired" id="is-required-chk" type="checkbox">
-              <label for="is-required-chk">Required?</label>
-            </div>
-          </div>
-
-          <div v-if="['text', 'number', 'date'].indexOf(selectedDocField.type) > -1" class="input-wrap">
-            <h4>Default Value</h4>
-            <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
-                   v-if="selectedDocField.type === 'number'" type="number">
-            <input v-model="selectedDocField.defaultVal" v-on:focus="$event.target.select()"
-                   v-else type="text">
-          </div>
-
-          <div v-if="selectedDocField.type === 'number'" class="input-wrap">
-            <h4>Number Format</h4>
-            <select v-model="selectedDocField.numberFormat" v-on:change="onFormatChanged"
-                    class="number-format-select">
-              <option :value="NumberFormat.none">None</option>
-              <option :value="NumberFormat.comma">Comma</option>
-              <option :value="NumberFormat.currency">Currency</option>
-            </select>
-          </div>
-
-          <div v-if="selectedDocField.type === 'date'" class="input-wrap">
-            <h4>Date Format</h4>
-            <select v-model="selectedDocField.dateFormat" v-on:change="onFormatChanged">
-              <option :value="DateFormat.MMddyyyySlash">MM/dd/yyyy</option>
-              <option :value="DateFormat.MMddyyyyDash">MM-dd-yyyy</option>
-              <option :value="DateFormat.yyyyMMddSlash">yyyy/MM/dd</option>
-              <option :value="DateFormat.yyyyMMddDash">yyyy-MM-dd</option>
-              <option :value="DateFormat.yyyyMMdd">yyyyMMdd</option>
-            </select>
-          </div>
-
-          <div v-if="['text', 'number', 'phone', 'date'].indexOf(selectedDocField.type) > -1"
-            class="input-wrap">
-            <h4>Font</h4>
-            <select v-model="selectedDocField.fontFamily" v-on:change="onFontChanged" 
-                    class="font-select float-left">
-              <option :value="FontOption.helvetica">Helvetica</option>
-              <option :value="FontOption.courier">Courier</option>
-              <option :value="FontOption.times">Times</option>
-            </select>
-            <select v-model="selectedDocField.fontSize" v-on:change="onFontChanged"
-                    class="font-size-select float-left">
-              <option :value="8">8pt</option>
-              <option :value="9">9pt</option>
-              <option :value="10">10pt</option>
-              <option :value="11">11pt</option>
-              <option :value="12">12pt</option>
-              <option :value="13">13pt</option>
-              <option :value="14">14pt</option>
-              <option :value="15">15pt</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      
+      <doc-field-editor v-show="selectedDocField.isSelected"
+                        :selected-doc-field="selectedDocField"
+                        :drag-restriction="$refs.docBuilder"
+                        :on-format-changed="onFormatChanged"
+                        :on-font-changed="onFontChanged"></doc-field-editor>
     </div>
 
     <mobile-app-editor v-if="mobileEditorOpen" :all-doc-fields="allDocFields" 
@@ -182,6 +116,7 @@
   import pdfjs from 'pdfjs-dist'
   import DocFieldComponent from '@/components/DocField'
   import MobileAppEditor from '@/components/MobileAppEditor'
+  import DocFieldEditor from '@/components/DocFieldEditor'
   import SnapLine from '@/components/SnapLine'
 
   pdfjs.PDFJS.workerSrc = './static/pdf.worker.js'
@@ -241,6 +176,7 @@
       DocFieldComponent,
       SnapLine,
       MobileAppEditor,
+      DocFieldEditor,
     },
     computed: {
       canSave: function () {
@@ -598,7 +534,7 @@
           this.selectedDocField.snapLineY.isSelected = true
         }
 
-        this.$nextTick(() => this.$refs.selectedDocFieldName.select())
+        // this.$nextTick(() => this.$refs.selectedDocFieldName.select())
       },
 
       /*
@@ -952,110 +888,6 @@
         @extend .box;
         // height: 1100px;
         // width: 850px;
-      }
-    }
-
-    .toolbox-wrap {
-      @extend .shadowed;
-      background-color: $dark1;
-      border-radius: 8px;
-      border: 1px solid $dark10;
-      position: fixed;
-      z-index: 3;
-
-      .toolbox-hdr {
-        @extend .pnl;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        color: $font-light;
-        padding: 6px;
-        width: 100%;
-
-        i.fa.fa-ellipsis-v {
-          color: rgba(255, 255, 255, 0.2);
-          margin-right: 1px;
-        }
-
-        .toolbox-hdr-btn-wrap {
-          position: absolute;
-          right: 2px;
-          top: 4px;
-
-          .btn {
-            color: $font-light;
-
-            &:hover {
-              background-color: rgba($font-light, .2);
-            }
-
-            &.btn-plain {
-              padding: 2px 4px;
-            }
-
-            i.fa.fa-window-minimize,
-            i.fa.fa-window-maximize {
-              font-size: 11px;
-            }
-          }
-        }
-      }
-
-      &.minimized {
-        .toolbox-hdr {
-          border-radius: 8px;
-        }
-      }
-
-      .toolbox {
-        @extend .pnl;
-        border-top: 1px solid $dark10;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
-        color: $font-light;
-        height: 100%;
-        overflow: visible;
-        padding: 6px;
-        width: 100%;
-
-        input, select, option {
-          @extend .box;
-        }
-
-        >input[type=text] {
-          width: 100%;
-        }
-
-        >input[type=number], >select, >select >option {
-          width: 120px;
-        }
-      }
-    }
-
-    .field-editor-wrap {
-      left: 912px;
-      top: 319px;
-      width: 200px;
-
-      .input-wrap input[type=text] {
-        width: 100%;
-      }
-      
-      .number-format-select,
-      .input-wrap input[type=number] {
-        width: 100px;
-      }
-      
-      .font-select {
-        width: 120px;
-      }
-
-      .font-size-select {
-        width: 60px;
-        margin-left: 4px;
-      }
-
-      .checkbox-wrap {
-        padding-top: 8px;
       }
     }
 

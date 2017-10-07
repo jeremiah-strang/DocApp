@@ -51,8 +51,8 @@ The demo viewer creates, renders, and holds canvases only for visible pages to r
 
 
 # Sync dist folder to S3 and grant public read access
-cd C:\Users\jeremiah\Dev\DocApp\client && npm run build
-aws s3 sync C:\Users\jeremiah\Dev\DocApp\client\dist s3://docapp.jeremiahstrang.com --acl public-read
+cd C:\Users\jeremiah\Dev\DocApp\web-client && npm run build
+aws s3 sync C:\Users\jeremiah\Dev\DocApp\web-client\dist s3://docapp.jeremiahstrang.com --acl public-read
 
 # List files in S3 bucket
 aws s3 ls s3://mortgagebreakdown.com
