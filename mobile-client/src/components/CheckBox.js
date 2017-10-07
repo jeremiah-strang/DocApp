@@ -17,8 +17,12 @@ export default class CheckBox extends React.Component {
     super(props)
 
     this.state = {
-      isChecked: this.props.isChecked === true
     }
+  }
+
+  onToggle() {
+    this.props.onPress(!this.props.isChecked)
+    this.setState(previousState => { isChecked: !previousState.isChecked })
   }
 
   render() {
@@ -30,7 +34,8 @@ export default class CheckBox extends React.Component {
     }
 
     let iconWrap
-    if (this.state.isChecked === true) {
+    console.log('this.props.isChecked: ' + this.props.isChecked)
+    if (this.props.isChecked === true) {
       iconWrap = <View style={styles.checkBoxIconWrap}>
                    <FontAwesome style={styles.checkBoxIcon} name='check' size={20} />
                  </View>
@@ -42,10 +47,7 @@ export default class CheckBox extends React.Component {
       <View style={this.props.style}>
         <View style={styles.checkBoxWrap}>
           {iconWrap}
-          <TouchableHighlight onPress={() => {
-              console.log('highlight clicked')
-              this.props.onPress()
-            }}>
+          <TouchableHighlight onPress={this.onToggle.bind(this)}>
               <Text style={labelStyle}>{this.props.label}</Text>
           </TouchableHighlight>
         </View>
