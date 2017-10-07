@@ -36,11 +36,14 @@ export default class Home extends React.Component {
 
   render() {
     let docTemplateItems = this.state.docTemplates.map(docTemplate => {
-      return <DocTemplateItem docTemplate={docTemplate}
-                              onOpenDocTemplate={() => {
-                                this.loadDocTemplate(docTemplate)
-                              }}
-                              key={docTemplate.id}></DocTemplateItem>
+      return (
+        <DocTemplateItem docTemplate={docTemplate}
+                         onOpenDocTemplate={() => {
+                           this.loadDocTemplate(docTemplate)
+                         }}
+                         key={docTemplate.id}>
+        </DocTemplateItem>
+      )
      })
 
     if (!this.state.docTemplate) {
