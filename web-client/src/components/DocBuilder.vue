@@ -75,7 +75,7 @@
           <div class="toolbox-tool" data-field-type="number">Number</div>
           <div class="toolbox-tool" data-field-type="date">Date</div>
           <div class="toolbox-tool" data-field-type="phone">Phone Number</div>
-          <div class="toolbox-tool" data-field-type="drawing">Signature/Drawing</div>
+          <div class="toolbox-tool" data-field-type="signature">Signature</div>
           <div style="width: 100%; clear: both; margin-bottom: 4px;"></div>
           <div class="toolbox-tool float-left" data-field-type="check">
             <i class="fa fa-check"></i>
@@ -119,7 +119,8 @@
 
           <div v-if="selectedDocField.type === 'number'" class="input-wrap">
             <h4>Number Format</h4>
-            <select v-model="selectedDocField.numberFormat" v-on:change="onFormatChanged">
+            <select v-model="selectedDocField.numberFormat" v-on:change="onFormatChanged"
+                    class="number-format-select">
               <option :value="NumberFormat.none">None</option>
               <option :value="NumberFormat.comma">Comma</option>
               <option :value="NumberFormat.currency">Currency</option>
@@ -141,13 +142,13 @@
             class="input-wrap">
             <h4>Font</h4>
             <select v-model="selectedDocField.fontFamily" v-on:change="onFontChanged" 
-                    style="width: 110px;" class="float-left">
+                    class="font-select float-left">
               <option :value="FontOption.helvetica">Helvetica</option>
               <option :value="FontOption.courier">Courier</option>
               <option :value="FontOption.times">Times</option>
             </select>
             <select v-model="selectedDocField.fontSize" v-on:change="onFontChanged"
-                    style="width: 60px; margin-left: 4px;" class="float-left">
+                    class="font-size-select float-left">
               <option :value="8">8pt</option>
               <option :value="9">9pt</option>
               <option :value="10">10pt</option>
@@ -222,7 +223,7 @@
           number: getDefaultSharedProps(),
           date: getDefaultSharedProps(),
           phone: getDefaultSharedProps(),
-          drawing: getDefaultSharedProps(),
+          signature: getDefaultSharedProps(),
           check: getDefaultSharedProps('check'),
           checkx: getDefaultSharedProps('checkx'),
           checksq: getDefaultSharedProps('checksq'),
@@ -374,7 +375,7 @@
           type: type,
           height: toolboxTool.offsetHeight,
           isSelected: true,
-          isRequired: true,
+          isRequired: sharedProps.isRequired,
           onSelect: this.onSelect,
           ...this.getSnapLines(toolPos.left, toolPos.top),
         }, sharedProps)
@@ -843,7 +844,7 @@
       height: 0,
       fontFamily: FontOption.helvetica,
       fontSize: 12,
-      isRequired: true,
+      isRequired: false,
       numberFormat: NumberFormat.none,
       dateFormat: DateFormat.MMddyyyySlash,
     }
@@ -1034,6 +1035,28 @@
       left: 912px;
       top: 319px;
       width: 200px;
+
+      .input-wrap input[type=text] {
+        width: 100%;
+      }
+      
+      .number-format-select,
+      .input-wrap input[type=number] {
+        width: 100px;
+      }
+      
+      .font-select {
+        width: 120px;
+      }
+
+      .font-size-select {
+        width: 60px;
+        margin-left: 4px;
+      }
+
+      .checkbox-wrap {
+        padding-top: 8px;
+      }
     }
 
     .toolbox-tool-wrap {

@@ -20,15 +20,11 @@
       <div class="mobile-app-surface-wrap">
         <div class="mobile-app-surface">
           <h3>{{ name }}</h3>
-          <!-- <div v-show="allDocFields.length === 0" class="w100 text-center">
-            (no fields added yet)
-          </div> -->
-
           <div v-for="(item, index) in allDocFields" class="mobile-app-input-wrap">
             <div v-if="['check', 'checkx', 'checksq'].indexOf(item.type) === -1"
                  class="mobile-app-input-label">{{ item.name }}</div>
             <input v-if="item.type === DocFieldType.text" type="text" class="w100" disabled>
-            <textarea v-if="item.type === DocFieldType.drawing" rows="2" class="w100" disabled>
+            <textarea v-if="item.type === DocFieldType.signature" rows="2" class="w100" disabled>
             </textarea>
             <input v-if="item.type === DocFieldType.number" type="number" class="w100" disabled>
             <input v-if="item.type === DocFieldType.phone" type="text" placeholder="   -   -    "

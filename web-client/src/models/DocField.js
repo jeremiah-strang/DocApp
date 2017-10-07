@@ -80,8 +80,8 @@ export default class {
       case DocFieldType.phone:
         this.text = '555-555-1234'
         break
-      case DocFieldType.drawing:
-        this.text = 'Signature/Drawing'
+      case DocFieldType.signature:
+        this.text = 'Signature'
         break
       case DocFieldType.check:
       case DocFieldType.checkx:

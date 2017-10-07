@@ -3,7 +3,7 @@ export default Object.freeze({
   checksq: 'checksq',
   checkx: 'checkx',
   date: 'date',
-  drawing: 'drawing',
+  signature: 'signature',
   number: 'number',
   phone: 'phone',
   text: 'text',

@@ -63,8 +63,8 @@ export default class {
         return dateStr
       case 'phone':
         return '555-555-1234'
-      case 'drawing':
-        return 'Signature/Drawing'
+      case 'signature':
+        return 'Signature'
       case 'check':
       case 'checkx':
       case 'checksq':
