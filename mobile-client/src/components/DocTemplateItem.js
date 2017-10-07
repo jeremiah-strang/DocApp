@@ -24,7 +24,7 @@ export default class DocTemplateItem extends React.Component {
     let createdOnText = '' + MM + '/' + dd + '/' + yyyy
     return (
       <View style={styles.docTemplateItem}>
-        <FontAwesome style={styles.itemIcon} name='file-pdf-o' size={36} color={Colors.Theme1} />
+        <FontAwesome style={styles.itemIcon} name='file-pdf-o' size={30} color={Colors.Theme1} />
         <View style={styles.flexColumn}>
           <TouchableHighlight onPress={this.props.onOpenDocTemplate}>
             <Text numberOfLines={1} style={styles.itemName}>{this.props.docTemplate.name}</Text>
