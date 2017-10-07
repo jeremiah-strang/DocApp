@@ -1,5 +1,5 @@
 <template>
-  <div v-show="selectedDocField.isSelected" class="doc-field-editor toolbox-wrap">
+  <div v-show="selectedDocField.isSelected" class="doc-field-editor">
     <div class="toolbox-hdr">
       <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
       Field Properties</div>
@@ -73,8 +73,6 @@
 </template>
 
 <script>
-  import interact from 'interact.js'
-  import utils from '../utils/utils'
   import NumberFormat from '../models/NumberFormat'
   import DateFormat from '../models/DateFormat'
   import FontOption from '../models/FontOption'
@@ -117,39 +115,6 @@
         }
       },
     },
-
-    /**
-     * Set up draggable elements when the component is mounted
-     */
-    mounted: function () {
-      // make the toolbox draggable
-      this.toolboxInteractable = interact('.toolbox-hdr')
-        .draggable({
-          inertia: true,
-          restrict: {
-            restriction: this.dragRestriction,
-            endOnly: true,
-            elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-          },
-          autoScroll: true,
-          onmove: (event) => {
-            let target = event.target.parentNode
-            let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-            let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
-            target.style.webkitTransform = target.style.transform =
-              'translate(' + x + 'px, ' + y + 'px)'
-            target.setAttribute('data-x', x)
-            target.setAttribute('data-y', y)
-          },
-        })
-    },
-
-    /**
-     * Unset draggable elements before the component is destroyed
-     */
-    beforeDestroy: function () {
-      utils.unsetInteractable(this.toolInteractable)
-    },
   }
 </script>
 
@@ -157,6 +122,7 @@
   @import '../style/_shared.scss';
 
   .doc-field-editor {
+    @extend .toolbox-wrap;
     left: 912px;
     top: 319px;
     width: 200px;

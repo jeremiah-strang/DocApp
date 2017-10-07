@@ -1,5 +1,5 @@
 <template>
-  <div class="mobile-app-editor toolbox-wrap" :style="style">
+  <div class="mobile-app-editor" :style="style">
     <div class="toolbox-hdr">
       <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
       Mobile App Preview
@@ -92,6 +92,7 @@
   @import '../style/_shared.scss';
 
   .mobile-app-editor {
+    @extend .toolbox-wrap;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
     background-color: #fff;
     background-color: $gray3;

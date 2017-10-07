@@ -720,7 +720,7 @@
       // make the toolbox draggable
       this.toolboxInteractable = interact('.toolbox-hdr')
         .draggable({
-          inertia: true,
+          inertia: false,
           restrict: {
             restriction: this.$refs.docBuilder,
             endOnly: true,
