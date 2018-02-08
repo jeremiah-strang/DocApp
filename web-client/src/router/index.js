@@ -2,21 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Documents from '@/components/Documents'
 import Account from '@/components/Account'
-import Dashboard from '@/components/Dashboard'
+// import Dashboard from '@/components/Dashboard'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'Documents',
-    //   component: Documents,
-    // },
     {
       path: '/',
-      name: 'Dashboard',
-      component: Dashboard,
+      name: 'Documents',
+      component: Documents,
     },
     {
       path: '/documents',

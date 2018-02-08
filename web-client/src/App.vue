@@ -4,20 +4,20 @@
 
       <div class="app-nav-toggle" v-on:click="toggleNav"><i class="fa fa-thumb-tack"></i></div>
 
-      <router-link to="/" title="Go to your dashboard">
+      <!-- <router-link to="/" title="Go to your dashboard">
         <i class="fa fa-home"></i>
         <span v-show="isNavMaximized">Dashboard</span>
-      </router-link>
+      </router-link> -->
 
       <router-link to="/Documents" title="Manage to your documents">
         <i class="fa fa-files-o"></i>
         <span v-show="isNavMaximized">Documents</span>
       </router-link>
 
-      <router-link to="/Account" title="View/edit your account settings">
+      <!-- <router-link to="/Account" title="View/edit your account settings">
         <i class="fa fa-cog"></i>
         <span v-show="isNavMaximized">Account</span>
-      </router-link>
+      </router-link> -->
     </div>
 
     <div class="app-body" :class="isNavMaximized ? 'app-nav-maximized' : ''">
